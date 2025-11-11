@@ -1,0 +1,30 @@
+.nav {
+    display: flex;
+    background-color: lightblue;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    justify-content: space-between;
+}
+
+.menu {
+    display: flex;
+    gap: 30px;
+    padding: 0px;
+    margin: 0;
+    list-style: none;
+    padding-right: 50px;
+}
+
+.menu a {
+    text-decoration: none;
+    color: black;
+    border: 2px solid black;
+    padding: 20px;
+}
+
+.menu a:hover {
+    color: white;
+    background-color: black;
+    transition: 0.3s ease;
+}
