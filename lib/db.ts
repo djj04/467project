@@ -1,6 +1,6 @@
 import mysql from 'mysql2/promise';
 
-export async function query(sql, params) {
+export async function query(sql: string, params: any): Promise<mysql.QueryResult> {
     const connection = await mysql.createConnection ({
         host: 'blitz.cs.niu.edu',
         user: 'student',
