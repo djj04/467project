@@ -45,6 +45,27 @@ export class Part {
         }
     }
 
+    /// Get a list of `Part`s for a given page. The first page is page 0
+    public static async list(page: number): Promise<Part[] | null> {
+        try {
+            const rows = await Legacy.query("SELECT * FROM parts LIMIT ? OFFSET ?;", [this.AMOUNT_PER_PAGE, this.AMOUNT_PER_PAGE * page])
+            if (rows.length <= 0) {
+                return []
+            }
+            let result: Part[] = []
+            for (const row of rows) {
+                const part = Part.fromObject(row)
+                if (!part)
+                    continue
+                result.push(part)
+            }
+            return result
+        } catch (error) {
+            console.error(error)
+            return null
+        }
+    }
+
     /// Create a `Part` from an object, like the kind provided by queries to the legacy database.
     private static fromObject(obj: any): Part | null {
         const {number, description, price, weight, pictureURL} = obj
