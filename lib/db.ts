@@ -1,7 +1,8 @@
 import mysql from 'mysql2/promise';
 
 export namespace Legacy {
-    export async function query(sql: string, params: any | null = null): Promise<mysql.QueryResult> {
+    /// Throws
+    export async function query(sql: string, params: any | null = null): Promise<any> {
         const connection = await mysql.createConnection ({
             host: 'blitz.cs.niu.edu',
             user: 'student',
@@ -17,5 +18,50 @@ export namespace Legacy {
         const [rows] = await connection.execute(sql, params);
         await connection.end();
         return rows;
+    }
+}
+
+export class Part {
+    private static AMOUNT_PER_PAGE = 36
+    
+    public number: number
+    public description: string
+    public price: number
+    public weight: number
+    public pictureURL: string
+    public inventoryCount: number
+
+    /// Get a single `Part` given its `number`, by querying the databases
+    public static async byNumber(desiredNumber: number): Promise<Part | null> {
+        try {
+            const rows = await Legacy.query("SELECT * FROM parts WHERE number=?;", [desiredNumber])
+            if (rows.length != 1) {
+                return null
+            }
+            return Part.fromObject(rows[0])
+        } catch(error) {
+            console.error(error)
+            return null
+        }
+    }
+
+    /// Create a `Part` from an object, like the kind provided by queries to the legacy database.
+    private static fromObject(obj: any): Part | null {
+        const {number, description, price, weight, pictureURL} = obj
+        if (!number || !description || !price || !weight || !pictureURL) {
+            console.error(`Part from database had missing data: ${number} ${description} ${price} ${weight} ${pictureURL}`)
+        }
+        // TODO: Inventory count. This is from *our new*  db
+        return new Part(number, description, price, weight, pictureURL, 0)
+    }
+    
+    /// Do not use this directly outside of here to create from the database
+    private constructor(number: number, description: string, price: number, weight: number, pictureURL: string, inventoryCount: number) {
+        this.number = number
+        this.description = description
+        this.price = price
+        this.weight = weight
+        this.pictureURL = pictureURL
+        this.inventoryCount = inventoryCount
     }
 }
