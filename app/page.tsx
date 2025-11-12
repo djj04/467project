@@ -1,5 +1,6 @@
 import Navbar from '@/components/Navbar';
 import PartsList from '@/components/PartsList';
+import PartsListPaginationNav from '@/components/PartsListPaginationNav';
 
 export default async function Home(
   props: {
@@ -16,6 +17,7 @@ export default async function Home(
     <>
     <Navbar />
     <PartsList pageNumber={pageNumber} />
+    <PartsListPaginationNav pageNumber={pageNumber}/>
     </>
   );
 }
