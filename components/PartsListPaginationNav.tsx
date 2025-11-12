@@ -1,4 +1,5 @@
 "use client"
+import styles from './PartsListPaginationNav.module.css';
 
 import Link from "next/link"
 import { usePathname, useSearchParams } from "next/navigation"
@@ -13,11 +14,11 @@ export default function PartsListPaginationNav({pageNumber}: {pageNumber: number
 	}
 	
 	return (
-		<div>
+		<div className={styles.pages}>
 			{
-				pageNumber <= 0 ? null : <Link href={hrefForPageNumber(pageNumber - 1)}>Previous page</Link>
+				pageNumber <= 0 ? null : <Link className={styles.newpage} href={hrefForPageNumber(pageNumber - 1)}>Previous page</Link>
 			}
-			<Link href={hrefForPageNumber(pageNumber + 1)}>Next page</Link>
+			<Link className={styles.newpage} href={hrefForPageNumber(pageNumber + 1)}>Next page</Link>
 		</div>
 	)
 }

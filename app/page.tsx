@@ -1,6 +1,7 @@
 import Navbar from '@/components/Navbar';
 import PartsList from '@/components/PartsList';
 import PartsListPaginationNav from '@/components/PartsListPaginationNav';
+import  './globals.css';
 
 export default async function Home(
   props: {

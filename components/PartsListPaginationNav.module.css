@@ -1,0 +1,20 @@
+.pages {
+    display: flex;
+    justify-content: space-between;
+    padding: 0px 102px 30px 102px;
+}
+
+.newpage {
+    text-decoration: none;
+    gap: 10px;
+    font-size: 30px;
+    border: 2px solid black;
+    padding: 10px;
+    color: black;
+}
+
+.newpage:hover {
+    transition: 0.3. ease;
+    background-color: black;
+    color: white;
+}

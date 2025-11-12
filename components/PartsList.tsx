@@ -1,5 +1,6 @@
 import { Part } from "@/lib/db"
 import PartsCard from "./PartsCard"
+import styles from "./PartsList.module.css"
 
 export default async function PartsList({pageNumber}: {pageNumber: number}) {
     const parts = await Part.list(pageNumber)
@@ -7,12 +8,11 @@ export default async function PartsList({pageNumber}: {pageNumber: number}) {
         return (<p>No parts :(</p>)
     }
     return (
-        <ul>
+        <ul className={styles.items}>
             {parts.map(part=>(
                 <li key={part.number}>
                     <PartsCard
                         name={part.description}
-                        desc=""
                         image={part.pictureURL}
                         price={part.price}
                         amount={part.inventoryCount}
