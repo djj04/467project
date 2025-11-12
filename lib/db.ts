@@ -1,6 +1,6 @@
 import mysql from 'mysql2/promise';
 
-export namespace Legacy {
+namespace Legacy {
     /// Throws
     export async function query(sql: string, params: any | null = null): Promise<any> {
         const connection = await mysql.createConnection ({
