@@ -11,11 +11,7 @@ export default async function PartsList({pageNumber}: {pageNumber: number}) {
             {parts.map(part=>(
                 <li key={part.number}>
                     <PartsCard
-                        name={part.description}
-                        desc=""
-                        image={part.pictureURL}
-                        price={part.price}
-                        amount={part.inventoryCount}
+                        part={part}
                     />
                 </li>
             ))}
