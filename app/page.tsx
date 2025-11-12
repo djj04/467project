@@ -1,15 +1,21 @@
 import Navbar from '@/components/Navbar';
-import PartsCard from '@/components/PartsCard';
 import PartsList from '@/components/PartsList';
 
-export default function Home() {
-  const testamount = 24;
-  const testprice = 28.95;
+export default async function Home(
+  props: {
+    searchParams?: Promise<{
+      page?: string;
+    }>;
+  }
+) {
+  const pageNumber = !props.searchParams ? 0 : parseInt(
+    (await props.searchParams).page || "0"
+  )
 
   return (
     <>
     <Navbar />
-    <PartsList pageNumber={0} />
+    <PartsList pageNumber={pageNumber} />
     </>
   );
 }
