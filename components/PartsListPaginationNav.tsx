@@ -18,7 +18,9 @@ export default function PartsListPaginationNav({pageNumber}: {pageNumber: number
 			{
 				pageNumber <= 0 ? null : <Link className={styles.newpage} href={hrefForPageNumber(pageNumber - 1)}>Previous page</Link>
 			}
-			<Link className={styles.newpage} href={hrefForPageNumber(pageNumber + 1)}>Next page</Link>
+			{
+				pageNumber >= 3 ? null : <Link className={styles.newpage} href={hrefForPageNumber(pageNumber + 1)}>Next page</Link>
+			}
 		</div>
 	)
 }
