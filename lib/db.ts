@@ -72,8 +72,10 @@ export class Part {
         if (!number || !description || !price || !weight || !pictureURL) {
             console.error(`Part from database had missing data: ${number} ${description} ${price} ${weight} ${pictureURL}`)
         }
+        // Round the price to the nearest cent
+        const roundedPrice = Math.round(price * 100) / 100
         // TODO: Inventory count. This is from *our new*  db
-        return new Part(number, description, price, weight, pictureURL, 0)
+        return new Part(number, description, roundedPrice, weight, pictureURL, 0)
     }
     
     /// Do not use this directly outside of here to create from the database
