@@ -1,5 +1,6 @@
 import Navbar from '@/components/Navbar';
 import PartsCard from '@/components/PartsCard';
+import PartsList from '@/components/PartsList';
 
 export default function Home() {
   const testamount = 24;
@@ -8,12 +9,7 @@ export default function Home() {
   return (
     <>
     <Navbar />
-    <PartsCard name="testname"
-               desc="this is a test description for this auto part!" 
-               image="/testimg1.jfif" 
-               amount={testamount}
-               price={testprice}
-      />
+    <PartsList pageNumber={0} />
     </>
   );
 }
