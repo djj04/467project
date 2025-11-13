@@ -22,7 +22,7 @@ export namespace Cart {
 		return JSON.parse(localStorage.getItem(KEY) || "[]")
 	}
 
-	type Item = {
+	export type Item = {
 		number: number,
 		quantity: number
 	}
