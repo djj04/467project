@@ -17,7 +17,7 @@ export default function PartsCard({part}: CardProps) {
                 <p>Quantity: {part.inventoryCount}</p>
             </div>
             <div className={styles.cart}>
-                <AddToCartButton partNumber={part.number} />
+                <AddToCartButton partNumber={part.number} maxQuantity={part.inventoryCount}/>
             </div>
         </div>
     )
