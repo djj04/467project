@@ -75,7 +75,7 @@ export class Part {
         // Round the price to the nearest cent
         const roundedPrice = Math.round(price * 100) / 100
         // TODO: Inventory count. This is from *our new*  db
-        return new Part(number, description, roundedPrice, weight, pictureURL, 0)
+        return new Part(number, description, roundedPrice, weight, pictureURL, 10)
     }
     
     /// Do not use this directly outside of here to create from the database
