@@ -1,4 +1,6 @@
 import mysql from 'mysql2/promise';
+import { Cart } from './cart';
+import { authorizeTransaction } from './authorizeCard';
 
 namespace Legacy {
     /// Throws
@@ -44,6 +46,74 @@ namespace New {
     }
 }
 
+/// Throws
+export async function shippingAndHandlingFor(weight: number): Promise<number> {
+    const rows = await New.query("SELECT charge FROM shipping_and_handling_brackets WHERE ? >= start_weight AND ? <= end_weight", [weight, weight])
+    if (rows.length <= 0) {
+        throw `Could not get shipping and handling charge for order with total weight ${weight}`
+    }
+    return rows[0].charge
+}
+
+export class Order {
+    /// Throws
+    public static async create(
+        mailingAddress: string,
+        customer: {
+            name: string,
+            emailAddress: string
+        },
+        card: {
+            number: string,
+            cardholderName: string,
+            expiration: {month: number, year: number}
+        },
+        cartContents: Cart.Item[]
+    ) {
+        // Validate whether we have enough items in stock, but don't decrease them until the order is shipped. At that point, will need to validate again.
+        const items = await Part.listByNumber(cartContents.map(e=>e.number))
+        if (!items) {
+            throw "Could not find items"
+        }
+        if (cartContents.findIndex(e=>e.quantity > (items.find(p=>p.number==e.number)?.inventoryCount || 0)) != -1) {
+            throw "Not enough items in stock"
+        }
+        const totalItemPrice = items.reduce<number>((price, item) => price + item.price * (cartContents.find(e=>e.number == item.number)?.quantity || 0), 0)
+        const totalWeight = items.reduce<number>((weight, item) => weight + item.weight * (cartContents.find(e=>e.number == item.number)?.quantity || 0), 0)
+
+        const shippingAndHandlingCharges = await shippingAndHandlingFor(totalWeight)
+        
+        const totalPrice = Math.round((totalItemPrice + shippingAndHandlingCharges) * 100) / 100
+
+        const cardAuthorizationCode = await authorizeTransaction(`Transaction ${Date()}`, card.number, card.cardholderName, card.expiration.month, card.expiration.year, totalPrice)
+        if (!cardAuthorizationCode) {
+            throw "Could not authorize credit card"
+        }
+
+        const orderID = (await New.query(
+            `INSERT INTO orders (
+                mailing_address,
+                customer_name,
+                customer_email_address,
+                total_price_charged,
+                card_authorization_code
+            ) VALUES (?, ?, ?, ?, ?);`,
+            [
+                mailingAddress,
+                customer.name,
+                customer.emailAddress,
+                totalPrice,
+                cardAuthorizationCode
+            ]
+        )).insertId
+
+        // Makes each query in parallel, then waits for them all to be done before returning
+        cartContents.map(item => {
+            return New.query("INSERT INTO products_in_orders (product_number, order_id, quantity) VALUES (?, ?, ?);", [item.number, orderID, item.quantity])
+        }).map(async e=>await e)
+    }
+}
+
 export class Part {
     private static AMOUNT_PER_PAGE = 36
     
@@ -74,6 +144,35 @@ export class Part {
     public static async list(page: number): Promise<Part[] | null> {
         try {
             const legacyRows = await Legacy.query("SELECT * FROM parts LIMIT ? OFFSET ?;", [this.AMOUNT_PER_PAGE, this.AMOUNT_PER_PAGE * page])
+            if (legacyRows.length <= 0) {
+                return []
+            }
+            // This is incredibly spooky but it's just generating the proper amount of question marks, it should still be safe
+            const newRows = await New.query(
+                `SELECT * FROM products WHERE NUMBER IN (${legacyRows.map(()=>'?').join(",")});`,
+                legacyRows.map((e:any)=>e.number).filter((e:number)=>e===undefined?false:true)
+            )
+            let result: Part[] = []
+            for (const row of legacyRows) {
+                const rowInNewDB = newRows.find((newRow: any) => newRow.number == row.number)
+                const amountInInventory = !!rowInNewDB ? rowInNewDB.count : 0
+                const part = Part.fromObject(row, amountInInventory)
+                if (!part)
+                    continue
+                result.push(part)
+            }
+            return result
+        } catch (error) {
+            console.error(error)
+            return null
+        }
+    }
+
+    /// Get a list of `Part`s for a list of given numbers
+    public static async listByNumber(numbers: number[]): Promise<Part[] | null> {
+        try {
+            // This is incredibly spooky but it's just generating the proper amount of question marks, it should still be safe
+            const legacyRows = await Legacy.query(`SELECT * FROM parts WHERE NUMBER IN (${numbers.map(()=>'?').join(",")});`, numbers)
             if (legacyRows.length <= 0) {
                 return []
             }
