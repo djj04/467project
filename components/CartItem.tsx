@@ -1,13 +1,16 @@
-import { Part } from '@/lib/db';
+import { partByNumber } from '@/lib/clientdb';
 import styles from './PartsCard.module.css';
+import { use } from 'react';
 
 type CartItemProps = {
     number: number;
     quantity: number;
 }
 
-export default async function CartItem({ number, quantity }: CartItemProps) {
-    const part = await Part.byNumber(number)
+
+export default function CartItem({ number, quantity }: CartItemProps) {
+
+    const part = use(partByNumber(number));
 
     if (!part) {
         return (<p>Part not Found</p>)
