@@ -46,6 +46,63 @@ namespace New {
     }
 }
 
+export class ShippingAndHandlingBracket {
+    startWeight: number
+    endWeight: number
+    charge: number
+
+    public static async list(): Promise<ShippingAndHandlingBracket[]> {
+        const rows = await New.query("SELECT * FROM shipping_and_handling_brackets", [])
+        let result: ShippingAndHandlingBracket[] = []
+        for (const row of rows) {
+            const bracket = ShippingAndHandlingBracket.fromObject(row)
+            if (!bracket)
+                continue
+            result.push(bracket)
+        }
+        return result
+    }
+
+    /// Throws
+    public static async update(oldValue: ShippingAndHandlingBracket, newValue: ShippingAndHandlingBracket) {
+        await New.query(`
+            UPDATE shipping_and_handling_brackets 
+            SET start_weight = ?,
+                end_weight = ?,
+                charge = ?
+            WHERE start_weight = ? AND
+                  end_weight = ? AND
+                  charge = ?;
+        `, [
+            newValue.startWeight,
+            newValue.endWeight,
+            newValue.charge,
+            oldValue.startWeight,
+            oldValue.endWeight,
+            oldValue.charge
+        ])
+    }
+
+    private static fromObject(
+        {start_weight: startWeight, end_weight: endWeight, charge}: any
+    ): ShippingAndHandlingBracket | null {
+        if (
+            typeof startWeight != "number" ||
+            typeof endWeight != "number" ||
+            typeof charge != "number"
+        ) {
+            return null
+        }
+        return new ShippingAndHandlingBracket(startWeight, endWeight, charge)
+    }
+    
+    private constructor(startWeight: number, endWeight: number, charge: number) {
+        this.startWeight = startWeight
+        this.endWeight = endWeight
+        this.charge = charge
+    }
+}
+
 /// Throws
 export async function shippingAndHandlingFor(weight: number): Promise<number> {
     const rows = await New.query("SELECT charge FROM shipping_and_handling_brackets WHERE ? >= start_weight AND ? <= end_weight", [weight, weight])
