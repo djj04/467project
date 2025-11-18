@@ -29,6 +29,7 @@ export default function ShippingAndHandlingBracketWidget(
 			<label htmlFor="start-weight">Start weight</label>
 			<input
 				type="number"
+				step="any"
 				min="0"
 				id="start-weight"
 				value={startWeight}
@@ -38,6 +39,7 @@ export default function ShippingAndHandlingBracketWidget(
 			<label htmlFor="end-weight">End weight</label>
 			<input
 				type="number"
+				step="any"
 				min="0"
 				id="end-weight"
 				value={endWeight}
@@ -47,6 +49,7 @@ export default function ShippingAndHandlingBracketWidget(
 			<label htmlFor="charge">Charge</label>
 			<input
 				type="number"
+				step="any"
 				min="0"
 				id="charge"
 				value={charge}
