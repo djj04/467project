@@ -1,15 +1,19 @@
-import { ShippingAndHandlingBracket } from "@/lib/db"
+"use client"
 import ShippingAndHandlingBracketWidget from "./ShippingAndHandlingBracketWidget"
+import NewShippingAndHandlingBracketButton from "./NewShippingAndHandlingButton"
+import { useState } from "react"
 
-export default async function ShippingAndHandlingAdmin() {
-	const brackets = await ShippingAndHandlingBracket.list()
+export default function ShippingAndHandlingAdmin(
+	{brackets}: {brackets: any[]}
+) {
+	const [displayedBrackets, setDisplayedBrackets] = useState(brackets)
 	
     return (
 		<div>
 			<h2>Shipping and handling brackets</h2>
 			<ul>
 				{
-					brackets.map(bracket => (
+					displayedBrackets.map(bracket => (
 						<li key={bracket.startWeight}>
 							<ShippingAndHandlingBracketWidget bracket={
 								JSON.parse(JSON.stringify(bracket))
@@ -17,6 +21,7 @@ export default async function ShippingAndHandlingAdmin() {
 						</li>
 					))
 				}
+				<li><NewShippingAndHandlingBracketButton displayedBrackets={displayedBrackets} setDisplayedBrackets={setDisplayedBrackets}/></li>
 			</ul>
 		</div>
     )

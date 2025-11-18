@@ -47,6 +47,8 @@ namespace New {
 }
 
 export class ShippingAndHandlingBracket {
+    public static HIGHEST_POSSIBLE_WEIGHT = 99.98999786376953
+
     startWeight: number
     endWeight: number
     charge: number
@@ -81,6 +83,27 @@ export class ShippingAndHandlingBracket {
             oldValue.endWeight,
             oldValue.charge
         ])
+    }
+
+    /// Throws
+    public static async addNew(startWeight: number, endWeight: number, charge: number): Promise<ShippingAndHandlingBracket | null> {
+        await New.query(`
+            INSERT INTO shipping_and_handling_brackets
+                (
+                    start_weight,
+                    end_weight,
+                    charge
+                )
+            VALUES (?, ?, ?)
+        `, [startWeight, endWeight, charge])
+
+        return ShippingAndHandlingBracket.get(startWeight, endWeight)
+    }
+
+    /// Throws
+    public static async get(startWeight: number, endWeight: number): Promise<ShippingAndHandlingBracket | null> {
+        const rows = await New.query("SELECT * FROM shipping_and_handling_brackets WHERE start_weight=? AND end_weight=?", [startWeight, endWeight])
+        return ShippingAndHandlingBracket.fromObject(rows[0] || {})
     }
 
     private static fromObject(
