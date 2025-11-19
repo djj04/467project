@@ -135,6 +135,11 @@ export async function shippingAndHandlingFor(weight: number): Promise<number> {
     return rows[0].charge
 }
 
+export interface OrderWithItems {
+    order: Order
+    items: {part: Part, quantity: number}[]
+}
+
 export class Order {
     id: number
     mailingAddress: string
@@ -221,6 +226,20 @@ export class Order {
             console.error(error)
             return null
         }
+    }
+    
+    public static async listWithItems(): Promise<OrderWithItems[] | null> {
+        const orderList = await Order.list()
+        if (!orderList)
+            return null
+        const result: OrderWithItems[] = []
+        for (const order of orderList) {
+            const items = await Part.listFromOrder(order)
+            if (!items)
+                continue
+            result.push({order, items})
+        }
+        return result
     }
 
     private static fromObject(obj: any): Order | null {
