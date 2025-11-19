@@ -9,6 +9,9 @@ export default function ClientsideAdminOrdersList({orders}: {orders: any[]}) {
 
 	let [minimumPrice, setMinimumPrice] = useState(-99999999.99)
 	let [maximumPrice, setMaximumPrice] = useState(99999999.99)
+
+	let [minimumDate, setMinimumDate] = useState("2001-01-01")
+	let [maximumDate, setMaximumDate] = useState("3001-01-01")
 	
 	return (
 		<div>
@@ -27,6 +30,13 @@ export default function ClientsideAdminOrdersList({orders}: {orders: any[]}) {
 					<label htmlFor="maximum-price"> to: </label>
 					<input type="number" step="any" id="maximum-price" value={maximumPrice} onChange={e=>setMaximumPrice(parseFloat(e.target.value))} />
 				</div>
+				<div>
+					<h4>Date placed</h4>
+					<label htmlFor="minimum-date">From: </label>
+					<input type="date" step="any" id="minimum-date" value={minimumDate} onChange={e=>setMinimumDate(e.target.value)} />
+					<label htmlFor="maximum-date"> to: </label>
+					<input type="date" step="any" id="maximum-date" value={maximumDate} onChange={e=>setMaximumDate(e.target.value)} />
+				</div>
 			</div>
 			<ul>
 				{orders
@@ -37,6 +47,9 @@ export default function ClientsideAdminOrdersList({orders}: {orders: any[]}) {
 						) && (
 							order.order.totalPriceCharged >= minimumPrice &&
 							order.order.totalPriceCharged <= maximumPrice
+						) && (
+							Date.parse(order.order.datePlaced) >= Date.parse(minimumDate) &&
+							Date.parse(order.order.datePlaced) <= Date.parse(maximumDate)
 						)
 					))
 					.map(order=>(
