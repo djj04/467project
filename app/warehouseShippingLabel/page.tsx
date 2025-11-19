@@ -1,0 +1,29 @@
+import { Order } from "@/lib/db";
+
+export default async function WarehouseInvoice(
+	props: {
+		searchParams?: Promise<{
+			orderID?: string;
+		}>;
+	}
+) {
+	const orderID = !props.searchParams ? -1 : parseInt(
+		(await props.searchParams).orderID || "-1"
+	)
+	if (orderID == -1) {
+		return (<h1>Invalid order</h1>)
+	}
+
+	const order = await Order.byID(orderID)
+	if (!order) {
+		return (<h1>Could not find order #{orderID}</h1>)
+	}
+	
+	
+	return (
+	<>
+		<h1>{order.customerName}</h1>
+		<p>{order.mailingAddress}</p>
+	</>
+	);
+}
