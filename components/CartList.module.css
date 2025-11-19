@@ -1,0 +1,22 @@
+.list {
+    padding-right: 200px;
+    padding-left: 200px;
+}
+
+.header {
+    display: grid;
+    grid-template-columns: 300px 300px 300px 300px;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid black;
+    text-align: center;
+}
+
+.items {
+    list-style-type: none;
+    border: 1px solid black;
+}
+
+.totalprice {
+    text-align: center;
+}

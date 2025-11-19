@@ -1,0 +1,34 @@
+.customerInfo {
+    border: 1px solid black;
+    text-align: center;
+    margin-left: 200px;
+    margin-right: 200px;
+}
+
+.nameInfo {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-bottom: 20px;
+    justify-content: center;
+}
+
+.addressInfo {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-bottom: 20px;
+    justify-content: center;
+}
+
+.ccInfo {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-bottom: 20px;
+    justify-content: center;
+}
+
+.submitButton {
+    margin-bottom: 20px;
+}
