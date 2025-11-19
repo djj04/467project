@@ -43,11 +43,11 @@ export default function OrderForm () {
         };
 
         try {
-            const res = await fetch("/api/order", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(
-                    {   mailingaddress: formData.mailingAddress, 
+            const res = await fetch('/api/order', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                        mailingAddress: formData.mailingAddress, 
                         customer,
                         card,
                         items

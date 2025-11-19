@@ -1,16 +1,14 @@
 import { Order } from '@/lib/db';
-import type { NextApiRequest, NextApiResponse } from 'next';
+import { NextRequest, NextResponse } from 'next/server';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-    if (req.method == "POST") {
-        const { mailingAddress, customer, card, items } = req.body;
-        try {
-            const newOrder = await Order.create(mailingAddress, customer, card, items);
-            res.status(200).json(newOrder);
-        } catch (err) {
-            res.status(500).json({ error: "Order Not Created"});
-        }
-    } else {
-        res.status(405).json({ error: "Must be POST"});
+export async function POST(req: NextRequest) {
+    try {
+        const { mailingAddress, customer, card, items } = await req.json();
+
+        await Order.create(mailingAddress, customer, card, items);
+
+        return NextResponse.json({ success: true}, { status: 200 });
+    } catch {
+        return NextResponse.json({error: "Order not created" }, { status: 500 });
     }
 }
