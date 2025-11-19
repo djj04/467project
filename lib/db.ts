@@ -227,6 +227,39 @@ export class Order {
             return null
         }
     }
+
+    public static async listOfUnshipped(): Promise<Order[] | null> {
+        try {
+            const rows = await New.query("SELECT * FROM orders WHERE status=\"authorized\";", [])
+            if (rows.length <= 0) {
+                return []
+            }
+            let orderList: Order[] = []
+            for (const row of rows) {
+                const part = Order.fromObject(row)
+                if (!part)
+                    continue
+                orderList.push(part)
+            }
+            return orderList
+        } catch (error) {
+            console.error(error)
+            return null
+        }
+    }
+
+    public static async byID(id: number): Promise<Order | null> {
+        try {
+            const rows = await New.query("SELECT * FROM orders WHERE id=?;", [id])
+            if (rows.length != 1) {
+                return null
+            }
+            return Order.fromObject(rows[0])
+        } catch (error) {
+            console.error(error)
+            return null
+        }
+    }
     
     public static async listWithItems(): Promise<OrderWithItems[] | null> {
         const orderList = await Order.list()
