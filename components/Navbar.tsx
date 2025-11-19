@@ -17,7 +17,10 @@ export default function Navbar() {
           <Link href="/receiving">Receiving</Link>
         </li>
         <li>
-          <Link href="/">Test3</Link>
+          <Link href="/admin">Admin</Link>
+        </li>
+        <li>
+          <Link href="/warehouse">Warehouse</Link>
         </li>
       </ul>
     </nav>
