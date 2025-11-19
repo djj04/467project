@@ -325,6 +325,23 @@ export class Part {
         }
     }
 
+    /// Get a list of `Part`s that are in a given `Order`.
+    public static async listFromOrder(order: Order): Promise<{part: Part, quantity: number}[] | null> {
+        try {
+            let result: {part: Part, quantity: number}[] = []
+            for (const {product_number: partId, quantity} of await New.query('SELECT product_number, quantity FROM products_in_orders WHERE order_id=?', [order.id])) {
+                const part = await Part.byNumber(partId)
+                if (!part)
+                    continue
+                result.push({part: part, quantity})
+            }
+            return result
+        } catch (error) {
+            console.error(error)
+            return null
+        }
+    }
+
     /// Get a list of `Part`s for a list of given numbers
     public static async listByNumber(numbers: number[]): Promise<Part[] | null> {
         try {
