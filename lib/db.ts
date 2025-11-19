@@ -300,6 +300,70 @@ export class Part {
     public pictureURL: string
     public inventoryCount: number
 
+    /// Update a part's inventory count by a give quantity
+    public static async addInventory(partNumber: number, quantityToAdd: number): Promise<boolean> {
+        try {
+            // Get the part
+            const part = await Part.byNumber(partNumber)
+            if (!part) {
+                console.error(`Part ${partNumber} not found.`)
+                return false
+            }
+
+            // Compute the new count
+            const newCount = part.inventoryCount + quantityToAdd
+
+            // Update the database
+            const result = await New.query(
+                "UPDATE products SET count = ? WHERE NUMBER = ?;",
+                [newCount, partNumber]
+            )
+
+            //if the part is not in the new database add it with the new quantity
+            if (!result.affectedRows || result.affectedRows === 0) {
+                await New.query(
+                    "INSERT INTO products (NUMBER, count) VALUES (?, ?);",
+                    [
+                    part.number,
+                    quantityToAdd
+                    ]
+                )
+            }
+
+            } catch (error) {
+            console.error(error)
+            return false
+        }
+        return true;
+    }
+
+    /// Update a part's inventory count by a give quantity
+    public static async subtractInventory(partNumber: number, quantityToSubtract: number): Promise<boolean> {
+        try {
+            // Get the part
+            const part = await Part.byNumber(partNumber)
+            if (!part) {
+                console.error(`Part ${partNumber} not found.`)
+                return false
+            }
+
+            // Compute the new count
+            const newCount = part.inventoryCount - quantityToSubtract
+
+            // Update the database
+            const result = await New.query(
+                "UPDATE products SET count = ? WHERE NUMBER = ?;",
+                [newCount, partNumber]
+            )
+
+            } catch (error) {
+            console.error(error)
+            return false
+        }
+        return true;
+    }
+
+    
     /// Get a single `Part` given its `number`, by querying the databases
     public static async byNumber(desiredNumber: number): Promise<Part | null> {
         try {
