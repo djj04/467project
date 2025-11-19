@@ -136,6 +136,16 @@ export async function shippingAndHandlingFor(weight: number): Promise<number> {
 }
 
 export class Order {
+    id: number
+    mailingAddress: string
+    customerName: string
+    customerEmailAddress: string
+    totalPriceCharged: number
+    cardAuthorizationCode: string
+    status: "authorized" | "shipped"
+    datePlaced: Date
+    dateShipped: Date
+    
     /// Throws
     public static async create(
         mailingAddress: string,
@@ -191,6 +201,73 @@ export class Order {
         cartContents.map(item => {
             return New.query("INSERT INTO products_in_orders (product_number, order_id, quantity) VALUES (?, ?, ?);", [item.number, orderID, item.quantity])
         }).map(async e=>await e)
+    }
+
+    public static async list(): Promise<Order[] | null> {
+        try {
+            const rows = await New.query("SELECT * FROM orders;", [])
+            if (rows.length <= 0) {
+                return []
+            }
+            let result: Order[] = []
+            for (const row of rows) {
+                const part = Order.fromObject(row)
+                if (!part)
+                    continue
+                result.push(part)
+            }
+            return result
+        } catch (error) {
+            console.error(error)
+            return null
+        }
+    }
+
+    private static fromObject(obj: any): Order | null {
+        if (
+            typeof obj.id != "number" ||
+            typeof obj.mailing_address != "string" ||
+            typeof obj.customer_name != "string" ||
+            typeof obj.customer_email_address != "string" ||
+            typeof obj.total_price_charged != "number" ||
+            typeof obj.card_authorization_code != "string" ||
+            !(obj.status == "authorized" || obj.status == "shipped")
+        ) {
+            return null
+        }
+        return new Order(
+            obj.id,
+            obj.mailing_address,
+            obj.customer_name,
+            obj.customer_email_address,
+            obj.total_price_charged,
+            obj.card_authorization_code,
+            obj.status,
+            obj.date_placed,
+            obj.date_shipped
+        )
+    }
+
+    private constructor(
+        id: number,
+        mailingAddress: string,
+        customerName: string,
+        customerEmailAddress: string,
+        totalPriceCharged: number,
+        cardAuthorizationCode: string,
+        status: "authorized" | "shipped",
+        datePlaced: Date,
+        dateShipped: Date,
+    ) {
+        this.id = id
+        this.mailingAddress = mailingAddress
+        this.customerName = customerName
+        this.customerEmailAddress = customerEmailAddress
+        this.totalPriceCharged = totalPriceCharged
+        this.cardAuthorizationCode = cardAuthorizationCode
+        this.status = status
+        this.datePlaced = datePlaced
+        this.dateShipped = dateShipped
     }
 }
 
