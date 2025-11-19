@@ -16,12 +16,25 @@ export default function WarehouseOrderControls({orderID}: {orderID: number}) {
 	const printPackingList = print.bind(null, "/warehousePackingList")
 	const printInvoice = print.bind(null, "/warehouseInvoice")
 	const printShippingLabel = print.bind(null, "/warehouseShippingLabel")
+
+	const completeOrder = async () => {
+		const response = await fetch("/api/completeOrder", {
+			method: "POST",
+			body: JSON.stringify(orderID)
+		})
+		if (response.status == 200) {
+			alert("Success!")
+		} else {
+			alert(`Failed: ${await response.text()}`)
+		}
+	}
 	
 	return (
 		<div>
 			<button onClick={printPackingList}>Print packing list</button>
 			<button onClick={printInvoice}>Print invoice</button>
 			<button onClick={printShippingLabel}>Print shipping label</button>
+			<button onClick={completeOrder}>Mark order as complete</button>
 		</div>
 	)
 }

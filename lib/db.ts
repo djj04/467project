@@ -275,6 +275,10 @@ export class Order {
         return result
     }
 
+    public async setStatus(newValue: "authorized" | "shipped") {
+        await New.query("UPDATE orders SET status=? WHERE id=?", [newValue, this.id])
+    }
+
     private static fromObject(obj: any): Order | null {
         if (
             typeof obj.id != "number" ||
