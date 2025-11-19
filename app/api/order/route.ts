@@ -7,7 +7,7 @@ export async function POST(req: NextRequest) {
 
         await Order.create(mailingAddress, customer, card, items);
 
-        return NextResponse.json({ success: true}, { status: 200 });
+        return NextResponse.json({ success: true }, { status: 200 });
     } catch {
         return NextResponse.json({error: "Order not created" }, { status: 500 });
     }
