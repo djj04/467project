@@ -15,11 +15,13 @@ export default function WarehouseOrderControls({orderID}: {orderID: number}) {
 
 	const printPackingList = print.bind(null, "/warehousePackingList")
 	const printInvoice = print.bind(null, "/warehouseInvoice")
+	const printShippingLabel = print.bind(null, "/warehouseShippingLabel")
 	
 	return (
 		<div>
 			<button onClick={printPackingList}>Print packing list</button>
 			<button onClick={printInvoice}>Print invoice</button>
+			<button onClick={printShippingLabel}>Print shipping label</button>
 		</div>
 	)
 }
