@@ -47,7 +47,7 @@ namespace New {
 }
 
 export class ShippingAndHandlingBracket {
-    public static HIGHEST_POSSIBLE_WEIGHT = 99.98999786376953
+    public static HIGHEST_POSSIBLE_WEIGHT = 100000000
 
     startWeight: number
     endWeight: number
