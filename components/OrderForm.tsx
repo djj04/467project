@@ -8,8 +8,7 @@ import { useRouter } from 'next/navigation';
 export default function OrderForm () {    
     const router = useRouter()
     const [formData, setFormData] = useState({
-        firstName: "",
-        lastName: "",
+        name: "",
         emailAddress: "",
         mailingAddress: "",
         ccName: "",
@@ -25,7 +24,7 @@ export default function OrderForm () {
 
     const gatherData = async () => {
         const items = Cart.allItems();
-        const fullName = formData.firstName + " " + formData.lastName;
+        const fullName = formData.name
 
         const customer = {
             name: fullName,
@@ -69,19 +68,12 @@ export default function OrderForm () {
     return (
         <div className={styles.customerInfo}>
                 <h3>Enter Your Information: </h3>
-                <div className={styles.nameInfo}>First Name:
+                <div className={styles.nameInfo}>Name:
                     <input  type="text" 
-                            id="firstName" 
-                            placeholder="Enter your first name"
-                            value={formData.firstName}
+                            id="name" 
+                            placeholder="Enter your name"
+                            value={formData.name}
                             onChange={handleChange}
-                    />
-                    Last Name: 
-                    <input  type="text" 
-                            id="lastName"   
-                            placeholder="Enter your last name"
-                            value={formData.lastName}
-                            onChange={handleChange}        
                     />
                 </div>
                 <div className={styles.addressInfo}>
