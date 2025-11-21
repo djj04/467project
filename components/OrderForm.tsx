@@ -54,9 +54,12 @@ export default function OrderForm () {
                     })
             });
             const data = await res.json();
+            if (res.status != 200)
+                throw data
             console.log("Order Successfully Created", data);
-        } catch (err) {
+        } catch (err: any) {
             console.error("Order Not Created", err);
+            alert(`Error: ${err.error}`)
         }
     }
 

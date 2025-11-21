@@ -8,7 +8,11 @@ export async function POST(req: NextRequest) {
         await Order.create(mailingAddress, customer, card, items);
 
         return NextResponse.json({ success: true }, { status: 200 });
-    } catch {
+    } catch (error: any) {
+        console.error(error)
+        if (error.isOrderError) {
+            return NextResponse.json({error: error.userError }, { status: 400 });
+        }
         return NextResponse.json({error: "Order not created" }, { status: 500 });
     }
 }

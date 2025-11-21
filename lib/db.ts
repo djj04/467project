@@ -47,7 +47,7 @@ namespace New {
 }
 
 export class ShippingAndHandlingBracket {
-    public static HIGHEST_POSSIBLE_WEIGHT = 100000000
+    public static HIGHEST_POSSIBLE_WEIGHT = 99999999
 
     startWeight: number
     endWeight: number
@@ -129,6 +129,7 @@ export class ShippingAndHandlingBracket {
 /// Throws
 export async function shippingAndHandlingFor(weight: number): Promise<number> {
     const rows = await New.query("SELECT charge FROM shipping_and_handling_brackets WHERE ? >= start_weight AND ? <= end_weight", [weight, weight])
+    console.log(rows)
     if (rows.length <= 0) {
         throw `Could not get shipping and handling charge for order with total weight ${weight}`
     }
@@ -166,46 +167,65 @@ export class Order {
         cartContents: Cart.Item[]
     ) {
         // Validate whether we have enough items in stock, but don't decrease them until the order is shipped. At that point, will need to validate again.
-        const items = await Part.listByNumber(cartContents.map(e=>e.number))
+        let items;
+        try {
+            items = await Part.listByNumber(cartContents.map(e=>e.number))
+        } catch (error) {
+            throw {isOrderError: true, error: error, userError: "Database error"}
+        }
         if (!items) {
-            throw "Could not find items"
+            throw {isOrderError: true, error: "Could not find items", userError: "Could not find items"}
         }
         if (cartContents.findIndex(e=>e.quantity > (items.find(p=>p.number==e.number)?.inventoryCount || 0)) != -1) {
-            throw "Not enough items in stock"
+            throw {isOrderError: true, error: "Not enough items in stock", userError: "Not enough items in stock"}
         }
         const totalItemPrice = items.reduce<number>((price, item) => price + item.price * (cartContents.find(e=>e.number == item.number)?.quantity || 0), 0)
         const totalWeight = items.reduce<number>((weight, item) => weight + item.weight * (cartContents.find(e=>e.number == item.number)?.quantity || 0), 0)
 
-        const shippingAndHandlingCharges = await shippingAndHandlingFor(totalWeight)
+        let shippingAndHandlingCharges;
+        try {
+            shippingAndHandlingCharges = await shippingAndHandlingFor(totalWeight)
+        } catch (error) {
+            throw {isOrderError: true, error: error, userError: "Too many items"}
+        }
         
         const totalPrice = Math.round((totalItemPrice + shippingAndHandlingCharges) * 100) / 100
 
-        const cardAuthorizationCode = await authorizeTransaction(`Transaction ${Date()}`, card.number, card.cardholderName, card.expiration.month, card.expiration.year, totalPrice)
+        let cardAuthorizationCode;
+        try {
+            cardAuthorizationCode = await authorizeTransaction(`Transaction ${Date()}`, card.number, card.cardholderName, card.expiration.month, card.expiration.year, totalPrice)
+        } catch (error: any) {
+            throw {isOrderError: true, error: error, userError: "Invalid card info: " + JSON.stringify(error.errors)}
+        }
         if (!cardAuthorizationCode) {
-            throw "Could not authorize credit card"
+            throw {isOrderError: true, error: "Could not authorize credit card", userError: "Could not authorize credit card"}
         }
 
-        const orderID = (await New.query(
-            `INSERT INTO orders (
-                mailing_address,
-                customer_name,
-                customer_email_address,
-                total_price_charged,
-                card_authorization_code
-            ) VALUES (?, ?, ?, ?, ?);`,
-            [
-                mailingAddress,
-                customer.name,
-                customer.emailAddress,
-                totalPrice,
-                cardAuthorizationCode
-            ]
-        )).insertId
+        try {
+            const orderID = (await New.query(
+                `INSERT INTO orders (
+                    mailing_address,
+                    customer_name,
+                    customer_email_address,
+                    total_price_charged,
+                    card_authorization_code
+                ) VALUES (?, ?, ?, ?, ?);`,
+                [
+                    mailingAddress,
+                    customer.name,
+                    customer.emailAddress,
+                    totalPrice,
+                    cardAuthorizationCode
+                ]
+            )).insertId
 
-        // Makes each query in parallel, then waits for them all to be done before returning
-        cartContents.map(item => {
-            return New.query("INSERT INTO products_in_orders (product_number, order_id, quantity) VALUES (?, ?, ?);", [item.number, orderID, item.quantity])
-        }).map(async e=>await e)
+            // Makes each query in parallel, then waits for them all to be done before returning
+            cartContents.map(item => {
+                return New.query("INSERT INTO products_in_orders (product_number, order_id, quantity) VALUES (?, ?, ?);", [item.number, orderID, item.quantity])
+            }).map(async e=>await e)
+        } catch (error) {
+            throw {isOrderError: true, error: error, userError: "Database error"}
+        }
     }
 
     public static async list(): Promise<Order[] | null> {
