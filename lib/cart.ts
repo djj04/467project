@@ -6,7 +6,11 @@ export namespace Cart {
 		const contents: Item[] = JSON.parse(localStorage.getItem(KEY) || "[]")
 		const existingIndex = contents.findIndex(e=>e.number == partNumber)
 		if (existingIndex != -1) {
-			contents[existingIndex].quantity = quantity
+			if (quantity <= 0) {
+				contents.splice(existingIndex, 1)
+			} else {
+				contents[existingIndex].quantity = quantity
+			}
 		} else {
 			contents.push({number: partNumber, quantity: quantity})
 		}
