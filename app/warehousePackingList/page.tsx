@@ -17,8 +17,7 @@ export default async function WarehousePackingList(
 	const order = await Order.byID(orderID)
 	if (!order) {
 		return (<h1>Could not find order #{orderID}</h1>)
-	}
-	
+	}	
 	return (
 	<>
 		<h1>Order #{order.id}</h1>
@@ -26,7 +25,7 @@ export default async function WarehousePackingList(
 			{
 				(await Part.listFromOrder(order))?.map(part => (
 					<li key={part.part.number}>
-						Part #{part.part.number} – {part.part.description} – {part.part.weight}kg
+						Part #{part.part.number} – {part.part.description} – Quantity: {part.quantity} – Total Weight: {(part.quantity * part.part.weight).toFixed(2)}kg
 					</li>
 				))
 			}

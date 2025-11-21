@@ -9,7 +9,7 @@ export default function WarehouseOrderControls({orderID}: {orderID: number}) {
 		}
 		listWindow.onload = () => {
 			listWindow.print()
-			listWindow.close()
+			setTimeout(() => listWindow.close(), 100)
 		}
 	}
 
