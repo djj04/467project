@@ -1,7 +1,20 @@
 "use client"
 
+import { Dispatch, SetStateAction } from "react"
+
 export default function NewShippingAndHandlingBracketButton(
-	{displayedBrackets, setDisplayedBrackets}: {displayedBrackets: any[], setDisplayedBrackets: any}
+	{displayedBrackets, setDisplayedBrackets}: {
+		displayedBrackets: {
+			startWeight: number,
+			endWeight: number,
+			charge: number
+		}[],
+		setDisplayedBrackets: Dispatch<SetStateAction<{
+			startWeight: number,
+			endWeight: number,
+			charge: number
+		}[]>>
+	}
 ) {
 	const newBracket = async () => {
 		const response = await fetch("/api/newShippingAndHandlingBracket", {
