@@ -5,7 +5,7 @@ export async function sendEmail(subject: string, body: string, address: string) 
 		console.log(`Should send email with subject ${subject} to ${address}`, body)
 		return
 	}
-	let transporter = nodemailer.createTransport({
+	const transporter = nodemailer.createTransport({
 		host: process.env.EMAIL_SMTP_HOST,
 		port: process.env.EMAIL_SMTP_PORT,
 		secure: false,
@@ -16,7 +16,8 @@ export async function sendEmail(subject: string, body: string, address: string) 
 		tls: {
 			rejectUnauthorized: false
 		}
-	})
+	// eslint-disable-next-line
+	} as any)
 
 	console.log(await transporter.sendMail({
 		from: process.env.EMAIL_SENDER,
