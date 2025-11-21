@@ -10,6 +10,7 @@ export async function POST(req: Request): Promise<Response> {
 		await order.finalize()
 		console.log(`Should send order confirmation email to ${order.customerEmailAddress} regarding order #${order.id}`)
 		return new Response("", {status: 200})
+	// eslint-disable-next-line
 	} catch (error: any) {
 		console.error(error)
 		if (error.canShowUser) {

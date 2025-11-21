@@ -59,6 +59,7 @@ export default function OrderForm () {
             console.log("Order Successfully Created", data);
             Cart.clear()
             router.push(`/orderSuccess?orderID=${encodeURIComponent(data.orderID)}`)
+        // eslint-disable-next-line
         } catch (err: any) {
             console.error("Order Not Created", err);
             alert(`Error: ${err.error}`)

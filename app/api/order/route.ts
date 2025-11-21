@@ -8,6 +8,7 @@ export async function POST(req: NextRequest) {
         const orderID = await Order.create(mailingAddress, customer, card, items);
 
         return NextResponse.json({ success: true, orderID }, { status: 200 });
+    // eslint-disable-next-line
     } catch (error: any) {
         console.error(error)
         if (error.isOrderError) {

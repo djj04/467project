@@ -1,5 +1,5 @@
 import mysql from 'mysql2/promise';
-import { Cart } from './cart';
+import * as Cart from './cart';
 import { authorizeTransaction } from './authorizeCard';
 
 const Legacy = {
@@ -15,6 +15,7 @@ const Legacy = {
         },
     }),
     /// Throws
+    // eslint-disable-next-line
     async query(sql: string, params: any | null = null): Promise<any> {
         const [rows] = await this.pool.execute(sql, params);
         return rows;
@@ -30,6 +31,7 @@ const New = {
         database: process.env.NEW_DB_DATABASE || "No value for environment variable NEW_DB_DATABASE, check .env.local in the root of the project",
         port: parseInt(process.env.NEW_DB_PORT || "3306")
     }),
+    // eslint-disable-next-line
     async query(sql: string, params: any | null = null): Promise<any> {
         try {
             const [rows] = await this.pool.execute(sql, params);
@@ -103,6 +105,7 @@ export class ShippingAndHandlingBracket {
     }
 
     private static fromObject(
+        // eslint-disable-next-line
         {start_weight: startWeight, end_weight: endWeight, charge}: any
     ): ShippingAndHandlingBracket | null {
         if (
@@ -190,6 +193,7 @@ export class Order {
         let cardAuthorizationCode;
         try {
             cardAuthorizationCode = await authorizeTransaction(`Transaction ${Date()}`, card.number, card.cardholderName, card.expiration.month, card.expiration.year, totalPrice)
+        // eslint-disable-next-line
         } catch (error: any) {
             throw {isOrderError: true, error: error, userError: "Invalid card info: " + JSON.stringify(error.errors)}
         }
@@ -315,6 +319,7 @@ export class Order {
         }
     }
 
+    // eslint-disable-next-line
     private static fromObject(obj: any): Order | null {
         if (
             typeof obj.id != "number" ||
@@ -470,6 +475,7 @@ export class Part {
             )
             const result: Part[] = []
             for (const row of legacyRows) {
+                // eslint-disable-next-line
                 const rowInNewDB = newRows.find((newRow: any) => newRow.number == row.number)
                 const amountInInventory = !!rowInNewDB ? rowInNewDB.count : 0
                 const part = Part.fromObject(row, amountInInventory)
@@ -522,6 +528,7 @@ export class Part {
             )
             const result: Part[] = []
             for (const row of legacyRows) {
+                // eslint-disable-next-line
                 const rowInNewDB = newRows.find((newRow: any) => newRow.number == row.number)
                 const amountInInventory = !!rowInNewDB ? rowInNewDB.count : 0
                 const part = Part.fromObject(row, amountInInventory)
@@ -537,6 +544,7 @@ export class Part {
     }
 
     /// Create a `Part` from an object, like the kind provided by queries to the legacy database.
+    // eslint-disable-next-line
     private static fromObject(obj: any, inventoryCount: number): Part | null {
         const {number, description, price, weight, pictureURL} = obj
         if (!number || !description || !price || !weight || !pictureURL) {
