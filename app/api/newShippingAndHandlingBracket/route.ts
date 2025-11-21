@@ -1,6 +1,6 @@
 import { ShippingAndHandlingBracket } from "@/lib/db"
 
-export async function POST(_: Request): Promise<Response> {
+export async function POST(): Promise<Response> {
 	try {
 		const brackets = await ShippingAndHandlingBracket.list()
 
