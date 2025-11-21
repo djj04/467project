@@ -1,4 +1,5 @@
 import { Order } from "@/lib/db"
+import { sendEmail } from "@/lib/email"
 
 export async function POST(req: Request): Promise<Response> {
 	try {
@@ -8,7 +9,11 @@ export async function POST(req: Request): Promise<Response> {
 			return new Response("Could not find order", { status: 400 })
 		}
 		await order.finalize()
-		console.log(`Should send order confirmation email to ${order.customerEmailAddress} regarding order #${order.id}`)
+		sendEmail(
+			`Order #${order.id} has shipped!`,
+			`Your order placed on ${order.datePlaced.toUTCString()} has been shipped!`,
+			order.customerEmailAddress
+		)
 		return new Response("", {status: 200})
 	// eslint-disable-next-line
 	} catch (error: any) {
