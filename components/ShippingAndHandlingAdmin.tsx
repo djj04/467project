@@ -4,7 +4,13 @@ import NewShippingAndHandlingBracketButton from "./NewShippingAndHandlingButton"
 import { useState } from "react"
 
 export default function ShippingAndHandlingAdmin(
-	{brackets}: {brackets: any[]}
+	{brackets}: {
+		brackets: {
+			startWeight: number,
+			endWeight: number,
+			charge: number
+		}[]
+}
 ) {
 	const [displayedBrackets, setDisplayedBrackets] = useState(brackets)
 	
