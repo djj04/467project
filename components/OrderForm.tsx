@@ -33,7 +33,7 @@ export default function OrderForm () {
 
         const expiration = {
             month: formData.ccExpirationMonth,
-            year: formData.ccExpirationYear
+            year: formData.ccExpirationYear < 2000 ? 2000 + formData.ccExpirationYear : formData.ccExpirationYear
         };
 
         const card = {
