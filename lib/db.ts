@@ -339,21 +339,24 @@ export class Part {
 
     /// Update a part's inventory count by a give quantity
     public static async addInventory(partNumber: number, quantityToAdd: number): Promise<boolean> {
-        try {
-            // Get the part
-            const part = await Part.byNumber(partNumber)
-            if (!part) {
-                console.error(`Part ${partNumber} not found.`)
-                return false
-            }
+        // Get the part
+        const part = await Part.byNumber(partNumber)
+        if (!part) {
+            console.error(`Part ${partNumber} not found.`)
+            return false
+        }
+        return await part.addInventory(quantityToAdd)
+    }
 
+    public async addInventory(quantityToAdd: number): Promise<boolean> {
+        try {
             // Compute the new count
-            const newCount = part.inventoryCount + quantityToAdd
+            const newCount = this.inventoryCount + quantityToAdd
 
             // Update the database
             const result = await New.query(
                 "UPDATE products SET count = ? WHERE NUMBER = ?;",
-                [newCount, partNumber]
+                [newCount, this.number]
             )
 
             //if the part is not in the new database add it with the new quantity
@@ -361,13 +364,13 @@ export class Part {
                 await New.query(
                     "INSERT INTO products (NUMBER, count) VALUES (?, ?);",
                     [
-                    part.number,
+                    this.number,
                     quantityToAdd
                     ]
                 )
             }
 
-            } catch (error) {
+        } catch (error) {
             console.error(error)
             return false
         }
