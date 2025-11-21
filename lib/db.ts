@@ -2,8 +2,8 @@ import mysql from 'mysql2/promise';
 import { Cart } from './cart';
 import { authorizeTransaction } from './authorizeCard';
 
-namespace Legacy {
-    const pool = mysql.createPool({
+const Legacy = {
+    pool: mysql.createPool({
         host: 'blitz.cs.niu.edu',
         user: 'student',
         password: 'student',
@@ -13,10 +13,10 @@ namespace Legacy {
             //TODO: Use system ca
             rejectUnauthorized: false
         },
-    })
+    }),
     /// Throws
-    export async function query(sql: string, params: any | null = null): Promise<any> {
-        const [rows] = await pool.execute(sql, params);
+    async query(sql: string, params: any | null = null): Promise<any> {
+        const [rows] = await this.pool.execute(sql, params);
         return rows;
     }
 }
