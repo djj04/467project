@@ -22,6 +22,11 @@ export namespace Cart {
 		return JSON.parse(localStorage.getItem(KEY) || "[]")
 	}
 
+	/// Clear the cart
+	export function clear() {
+		localStorage.setItem(KEY, "[]")
+	}
+
 	export type Item = {
 		number: number,
 		quantity: number

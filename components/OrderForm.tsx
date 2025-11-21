@@ -1,11 +1,12 @@
 'use client'
 
 import { Cart } from '@/lib/cart';
-import { Order } from '@/lib/db';
 import styles from './OrderForm.module.css';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function OrderForm () {    
+    const router = useRouter()
     const [formData, setFormData] = useState({
         firstName: "",
         lastName: "",
@@ -57,6 +58,8 @@ export default function OrderForm () {
             if (res.status != 200)
                 throw data
             console.log("Order Successfully Created", data);
+            Cart.clear()
+            router.push(`/orderSuccess?orderID=${encodeURIComponent(data.orderID)}`)
         } catch (err: any) {
             console.error("Order Not Created", err);
             alert(`Error: ${err.error}`)

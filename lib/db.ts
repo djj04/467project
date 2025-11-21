@@ -152,7 +152,7 @@ export class Order {
     datePlaced: Date
     dateShipped: Date
     
-    /// Throws
+    /// Throws, returns the order id
     public static async create(
         mailingAddress: string,
         customer: {
@@ -165,7 +165,7 @@ export class Order {
             expiration: {month: number, year: number}
         },
         cartContents: Cart.Item[]
-    ) {
+    ): Promise<number> {
         // Validate whether we have enough items in stock, but don't decrease them until the order is shipped. At that point, will need to validate again.
         let items;
         try {
@@ -223,6 +223,8 @@ export class Order {
             cartContents.map(item => {
                 return New.query("INSERT INTO products_in_orders (product_number, order_id, quantity) VALUES (?, ?, ?);", [item.number, orderID, item.quantity])
             }).map(async e=>await e)
+            
+            return orderID
         } catch (error) {
             throw {isOrderError: true, error: error, userError: "Database error"}
         }
