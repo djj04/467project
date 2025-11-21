@@ -26,7 +26,7 @@ export default async function WarehousePackingList(
 			{
 				(await Part.listFromOrder(order))?.map(part => (
 					<li key={part.part.number}>
-						Part #{part.part.number} – {part.part.description} – {part.part.weight}kg
+						Part #{part.part.number} – {part.part.description} – Quantity: {part.quantity} – Total Weight: {(part.quantity * part.part.weight).toFixed(2)}kg
 					</li>
 				))
 			}
