@@ -305,7 +305,7 @@ export class Order {
             if (items) {
                 for (const item of items) {
                     if (item.part.inventoryCount < item.quantity) {
-                        throw `Item #${item.part.number} only has ${item.part.inventoryCount} in inventory, but order #${this.id} wants ${item.quantity} of them`
+                        throw {canShowUser: true, message: `Item #${item.part.number} (${item.part.description}) only has ${item.part.inventoryCount} in inventory, but order #${this.id} wants ${item.quantity} of them`}
                     }
                     await item.part.addInventory(-1 * item.quantity)
                 }
@@ -315,6 +315,7 @@ export class Order {
         } catch (error) {
             console.error("Error in finalizing order!", this, error)
             await New.query("ROLLBACK")
+            throw error
         }
     }
 
