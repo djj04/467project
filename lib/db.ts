@@ -487,12 +487,18 @@ export class Part {
     /// Get a list of `Part`s that are in a given `Order`.
     public static async listFromOrder(order: Order): Promise<{part: Part, quantity: number}[] | null> {
         try {
+            const partsInOrder = await New.query('SELECT product_number, quantity FROM products_in_orders WHERE order_id=?', [order.id])
+            // part number to quantity
+            let quantities = new Map<number, number>()
+            for (const {product_number: partNumber, quantity} of partsInOrder) {
+                quantities.set(partNumber, quantity)
+            }
+            const parts = await Part.listByNumber([...quantities.keys()])
+            if (!parts)
+                return []
             let result: {part: Part, quantity: number}[] = []
-            for (const {product_number: partId, quantity} of await New.query('SELECT product_number, quantity FROM products_in_orders WHERE order_id=?', [order.id])) {
-                const part = await Part.byNumber(partId)
-                if (!part)
-                    continue
-                result.push({part: part, quantity})
+            for (const part of parts) {
+                result.push({part: part, quantity: quantities.get(part.number) || 0})
             }
             return result
         } catch (error) {
