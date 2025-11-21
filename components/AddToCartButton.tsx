@@ -1,6 +1,6 @@
 "use client"
 
-import { Cart } from "@/lib/cart"
+import * as Cart from "@/lib/cart"
 import { useState } from "react"
 
 export type AddToCartButtonProps = {

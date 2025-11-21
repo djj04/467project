@@ -1,6 +1,6 @@
 'use client'
 
-import { Cart } from '@/lib/cart';
+import * as Cart from "@/lib/cart"
 import styles from './OrderForm.module.css';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';

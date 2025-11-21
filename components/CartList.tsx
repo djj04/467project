@@ -1,6 +1,6 @@
 "use client";
 
-import { Cart } from '@/lib/cart';
+import * as Cart from "@/lib/cart"
 import CartItem from './CartItem';
 import styles from './CartList.module.css';
 import { useState, useEffect } from 'react';

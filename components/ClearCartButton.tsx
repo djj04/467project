@@ -1,6 +1,6 @@
 "use client"
 
-import { Cart } from "@/lib/cart"
+import * as Cart from "@/lib/cart"
 import { useRouter } from "next/navigation"
 export default function ClearCartButton() {
 	const router = useRouter()
