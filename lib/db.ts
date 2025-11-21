@@ -306,7 +306,7 @@ export class Order {
                     await item.part.addInventory(-1 * item.quantity)
                 }
             }
-            await New.query("UPDATE orders SET status=\"shipped\", date_shipped=? WHERE id=?", [(new Date()).toISOString(), this.id])
+            await New.query("UPDATE orders SET status=\"shipped\", date_shipped=STR_TO_DATE(?, '%Y-%m-%dT%H:%i:%s.%fZ') WHERE id=?", [(new Date()).toISOString(), this.id])
             await New.query("COMMIT")
         } catch (error) {
             console.error("Error in finalizing order!", this, error)
