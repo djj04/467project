@@ -3,9 +3,33 @@
 import { useEffect, useState } from "react";
 import AdminOrderCard from "./AdminOrderCard";
 
+interface Order {
+	order: {
+		id: number
+		mailingAddress: string
+		customerName: string
+		customerEmailAddress: string
+		totalPriceCharged: number
+		cardAuthorizationCode: string
+		status: "authorized" | "shipped"
+		datePlaced: string
+		dateShipped: string
+	}
+	items: {
+		part: {
+			number: number
+			description: string
+			price: number
+			weight: number
+			pictureURL: string
+			inventoryCount: number
+		},
+		quantity: number
+	}[]
+}
+
 export default function AdminOrdersList() {
-	const _os: any[] = useState([])
-	const [orders, setOrders] = _os
+	const [orders, setOrders] = useState<Order[]>([])
 
 	useEffect(() => {
 		const get = async () => {
@@ -51,7 +75,7 @@ export default function AdminOrdersList() {
 			</div>
 			<ul>
 				{orders
-					.filter((order: any) => (
+					.filter((order: Order) => (
 						(
 							(filterIncludesAuthorized && order.order.status == "authorized") ||
 							(filterIncludesShipped && order.order.status == "shipped")
@@ -63,13 +87,14 @@ export default function AdminOrdersList() {
 							Date.parse(order.order.datePlaced) <= Date.parse(maximumDate)
 						)
 					))
-					.map((order: any)=>(
-					<li key={order.order.id}>
-						<AdminOrderCard
-							order={order}
-						/>
-					</li>
-				))}
+					.map((order: Order)=>(
+						<li key={order.order.id}>
+							<AdminOrderCard
+								order={order}
+							/>
+						</li>
+					))
+				}
 			</ul>
 		</div>
 	)
