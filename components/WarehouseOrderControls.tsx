@@ -1,6 +1,9 @@
 "use client"
 
+import { useRouter } from "next/navigation"
+
 export default function WarehouseOrderControls({orderID}: {orderID: number}) {
+	const router = useRouter()
 	const print = (baseURL: string) => {
 		const listWindow = window.open(baseURL + "?orderID=" + encodeURIComponent(orderID))
 		if (!listWindow) {
@@ -24,6 +27,7 @@ export default function WarehouseOrderControls({orderID}: {orderID: number}) {
 		})
 		if (response.status == 200) {
 			alert("Success!")
+			router.replace("/warehouse")
 		} else {
 			alert(`Failed: ${await response.text()}`)
 		}
