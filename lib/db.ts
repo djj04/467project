@@ -3,22 +3,20 @@ import { Cart } from './cart';
 import { authorizeTransaction } from './authorizeCard';
 
 namespace Legacy {
+    const pool = mysql.createPool({
+        host: 'blitz.cs.niu.edu',
+        user: 'student',
+        password: 'student',
+        database: 'csci467',
+        port: 3306,
+        ssl: {
+            //TODO: Use system ca
+            rejectUnauthorized: false
+        },
+    })
     /// Throws
     export async function query(sql: string, params: any | null = null): Promise<any> {
-        const connection = await mysql.createConnection ({
-            host: 'blitz.cs.niu.edu',
-            user: 'student',
-            password: 'student',
-            database: 'csci467',
-            port: 3306,
-            ssl: {
-                //TODO: Use system ca
-                rejectUnauthorized: false
-            }
-        });
-
-        const [rows] = await connection.execute(sql, params);
-        await connection.end();
+        const [rows] = await pool.execute(sql, params);
         return rows;
     }
 }
