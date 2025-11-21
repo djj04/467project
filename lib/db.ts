@@ -51,7 +51,7 @@ export class ShippingAndHandlingBracket {
 
     public static async list(): Promise<ShippingAndHandlingBracket[]> {
         const rows = await New.query("SELECT * FROM shipping_and_handling_brackets", [])
-        let result: ShippingAndHandlingBracket[] = []
+        const result: ShippingAndHandlingBracket[] = []
         for (const row of rows) {
             const bracket = ShippingAndHandlingBracket.fromObject(row)
             if (!bracket)
@@ -232,7 +232,7 @@ export class Order {
             if (rows.length <= 0) {
                 return []
             }
-            let result: Order[] = []
+            const result: Order[] = []
             for (const row of rows) {
                 const part = Order.fromObject(row)
                 if (!part)
@@ -252,7 +252,7 @@ export class Order {
             if (rows.length <= 0) {
                 return []
             }
-            let orderList: Order[] = []
+            const orderList: Order[] = []
             for (const row of rows) {
                 const part = Order.fromObject(row)
                 if (!part)
@@ -468,7 +468,7 @@ export class Part {
                 `SELECT * FROM products WHERE NUMBER IN (${legacyRows.map(()=>'?').join(",")});`,
                 legacyRows.map((e:any)=>e.number).filter((e:number)=>e===undefined?false:true)
             )
-            let result: Part[] = []
+            const result: Part[] = []
             for (const row of legacyRows) {
                 const rowInNewDB = newRows.find((newRow: any) => newRow.number == row.number)
                 const amountInInventory = !!rowInNewDB ? rowInNewDB.count : 0
@@ -489,14 +489,14 @@ export class Part {
         try {
             const partsInOrder = await New.query('SELECT product_number, quantity FROM products_in_orders WHERE order_id=?', [order.id])
             // part number to quantity
-            let quantities = new Map<number, number>()
+            const quantities = new Map<number, number>()
             for (const {product_number: partNumber, quantity} of partsInOrder) {
                 quantities.set(partNumber, quantity)
             }
             const parts = await Part.listByNumber([...quantities.keys()])
             if (!parts)
                 return []
-            let result: {part: Part, quantity: number}[] = []
+            const result: {part: Part, quantity: number}[] = []
             for (const part of parts) {
                 result.push({part: part, quantity: quantities.get(part.number) || 0})
             }
@@ -520,7 +520,7 @@ export class Part {
                 `SELECT * FROM products WHERE NUMBER IN (${legacyRows.map(()=>'?').join(",")});`,
                 legacyRows.map((e:any)=>e.number).filter((e:number)=>e===undefined?false:true)
             )
-            let result: Part[] = []
+            const result: Part[] = []
             for (const row of legacyRows) {
                 const rowInNewDB = newRows.find((newRow: any) => newRow.number == row.number)
                 const amountInInventory = !!rowInNewDB ? rowInNewDB.count : 0

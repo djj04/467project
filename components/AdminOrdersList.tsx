@@ -4,8 +4,8 @@ import { Suspense, useEffect, useState } from "react";
 import AdminOrderCard from "./AdminOrderCard";
 
 export default function AdminOrdersList() {
-	let _os: any[] = useState([])
-	let [orders, setOrders] = _os
+	const _os: any[] = useState([])
+	const [orders, setOrders] = _os
 
 	useEffect(() => {
 		const get = async () => {
@@ -15,14 +15,14 @@ export default function AdminOrdersList() {
 		get()
 	}, [])
 	
-	let [filterIncludesAuthorized, setFilterIncludesAuthorized] = useState(true)
-	let [filterIncludesShipped, setFilterIncludesShipped] = useState(true)
+	const [filterIncludesAuthorized, setFilterIncludesAuthorized] = useState(true)
+	const [filterIncludesShipped, setFilterIncludesShipped] = useState(true)
 
-	let [minimumPrice, setMinimumPrice] = useState(-99999999.99)
-	let [maximumPrice, setMaximumPrice] = useState(99999999.99)
+	const [minimumPrice, setMinimumPrice] = useState(-99999999.99)
+	const [maximumPrice, setMaximumPrice] = useState(99999999.99)
 
-	let [minimumDate, setMinimumDate] = useState("2001-01-01")
-	let [maximumDate, setMaximumDate] = useState("3001-01-01")
+	const [minimumDate, setMinimumDate] = useState("2001-01-01")
+	const [maximumDate, setMaximumDate] = useState("3001-01-01")
 	
 	return (
 		<div>

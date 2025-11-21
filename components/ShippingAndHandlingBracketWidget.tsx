@@ -7,10 +7,10 @@ export default function ShippingAndHandlingBracketWidget(
 		bracket: {startWeight: number, endWeight: number, charge: number}
 	}
 ) {
-	let [mostRecentlySaved, setMostRecentlySaved] = useState(bracket)
-	let [startWeight, setLocalStartWeight] = useState(bracket.startWeight)
-	let [endWeight, setLocalEndWeight] = useState(bracket.endWeight)
-	let [charge, setLocalCharge] = useState(bracket.charge)
+	const [mostRecentlySaved, setMostRecentlySaved] = useState(bracket)
+	const [startWeight, setLocalStartWeight] = useState(bracket.startWeight)
+	const [endWeight, setLocalEndWeight] = useState(bracket.endWeight)
+	const [charge, setLocalCharge] = useState(bracket.charge)
 	
 	const saveValues = async () => {
 		const response = await fetch("/api/updateShippingAndHandling", {
