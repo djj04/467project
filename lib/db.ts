@@ -21,18 +21,18 @@ const Legacy = {
     }
 }
 
-namespace New {
-    const pool = mysql.createPool ({
+const New = {
+    //TODO: ssl?
+    pool: mysql.createPool ({
         host: process.env.NEW_DB_HOST || "No value for environment variable NEW_DB_HOST, check .env.local in the root of the project",
         user: process.env.NEW_DB_USER || "No value for environment variable NEW_DB_USER, check .env.local in the root of the project",
         password: process.env.NEW_DB_PASSWORD || "No value for environment variable NEW_DB_PASSWORD, check .env.local in the root of the project",
         database: process.env.NEW_DB_DATABASE || "No value for environment variable NEW_DB_DATABASE, check .env.local in the root of the project",
         port: parseInt(process.env.NEW_DB_PORT || "3306")
-    });
-    //TODO: ssl?
-    export async function query(sql: string, params: any | null = null): Promise<any> {
+    }),
+    async query(sql: string, params: any | null = null): Promise<any> {
         try {
-            const [rows] = await pool.execute(sql, params);
+            const [rows] = await this.pool.execute(sql, params);
             return rows;
         } catch (error) {
             // Ignore errors, in case new db is down
