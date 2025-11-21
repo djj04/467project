@@ -14,6 +14,7 @@ export async function GET(req: Request): Promise<Response> {
         const parts = await Part.listByNumber(numbers)
         return new Response(JSON.stringify(parts), {status: 200})
     } catch (error) {
+        console.error(error)
         return new Response("", { status: 500 })
     }
 }
