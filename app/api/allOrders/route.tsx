@@ -5,6 +5,7 @@ export async function GET(): Promise<Response> {
 		const orders = await Order.listWithItems()
 		return new Response(JSON.stringify(orders), {status: 200})
 	} catch (error) {
+		console.error(error)
 		return new Response("", { status: 500 })
 	}
 }
