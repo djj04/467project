@@ -1,6 +1,7 @@
 import mysql from 'mysql2/promise';
 import * as Cart from './cart';
 import { authorizeTransaction } from './authorizeCard';
+import { sendEmail } from './email';
 
 const Legacy = {
     pool: mysql.createPool({
@@ -223,6 +224,23 @@ export class Order {
             cartContents.map(item => {
                 return New.query("INSERT INTO products_in_orders (product_number, order_id, quantity) VALUES (?, ?, ?);", [item.number, orderID, item.quantity])
             }).map(async e=>await e)
+            
+            sendEmail(
+                `Order #${orderID} confirmation`,
+                `Hi ${customer.name}!\n\n` +
+                `This is confirmation that your order has succesfully been placed!\n\n` +
+                `You will recieve an email when it is shipped.\n\n` +
+                `You can expect to recieve: ${items.map(
+                    item=>{
+                        const quantity = cartContents.find(e=>e.number == item.number)?.quantity || 0
+                        return `\n\n${quantity} of item #${item.number} (${item.description}) – costing $${(item.price * quantity).toFixed(2)}`
+                    }
+                )}\n\n` +
+                `Subtotal: $${totalItemPrice.toFixed(2)}\n\n` +
+                `Shipping and handling: $${shippingAndHandlingCharges.toFixed(2)}\n\n` +
+                `Total cost charged: $${totalPrice.toFixed(2)}`,
+                customer.emailAddress
+            )
             
             return orderID
         } catch (error) {
