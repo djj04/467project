@@ -427,7 +427,7 @@ export class Part {
             const newCount = part.inventoryCount - quantityToSubtract
 
             // Update the database
-            const result = await New.query(
+            await New.query(
                 "UPDATE products SET count = ? WHERE NUMBER = ?;",
                 [newCount, partNumber]
             )
