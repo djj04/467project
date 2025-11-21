@@ -2,13 +2,13 @@
 
 import { Cart } from '@/lib/cart';
 import CartItem from './CartItem';
-import { setDecimals } from './CartItem';
 import styles from './CartList.module.css';
 import { useState, useEffect } from 'react';
 
 export default function CartList(){
     const items = Cart.allItems();
     const [parts, setParts] = useState<Record<number, any[]>>({});
+    const [charges, setCharges] = useState(0);
 
     useEffect(() => {
         if (!items || items.length <= 0) return;
@@ -18,12 +18,23 @@ export default function CartList(){
         (async () => {
             const data = await (await fetch(`/api/part?ids=[${numbers.join(",")}]`)).json();
             const map: Record<number, any> = {};
+            let weightSum = 0;
 
             data.forEach((part: any) => {
                 map[part.number] = [part];
+                const quantity = items.find(item => item.number === part.number)?.quantity || 1;
+                weightSum += quantity * part.weight;
             });
 
             setParts(map)
+
+            const result = await fetch("/api/shippingHandlingCharges", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ weightSum })
+            })
+            const data2 = await result.json();
+            setCharges(data2.result);
         })()
     }, []);
 
@@ -31,11 +42,13 @@ export default function CartList(){
         return (<p>No Items in Cart!</p>)
     }
     
-    const total = items.reduce((sum, item) => {
+    const itemstotal = items.reduce((sum, item) => {
         const part = parts[item.number]?.[0];
         const price = part?.price ?? 0;
         return sum + price * item.quantity;
     }, 0)
+
+    const total = itemstotal + charges;
 
     return (
         <div className={styles.list}>
@@ -56,7 +69,9 @@ export default function CartList(){
                     </li>
                 ))}
                 <li>
-                    <h2 className={styles.totalprice}>Your Total Price is: ${setDecimals(total)}</h2>
+                    <h2 className={styles.totalprice}>The price of your parts are: ${itemstotal.toFixed(2)}</h2>
+                    <h2 className={styles.totalprice}>Shipping and Handling prices: ${charges?.toFixed(2) ?? 0.00}</h2>
+                    <h2 className={styles.totalprice}>Total Price: ${total.toFixed(2)}</h2>
                 </li>
             </ul>
         </div>
