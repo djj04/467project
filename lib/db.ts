@@ -22,19 +22,17 @@ namespace Legacy {
 }
 
 namespace New {
+    const pool = mysql.createPool ({
+        host: process.env.NEW_DB_HOST || "No value for environment variable NEW_DB_HOST, check .env.local in the root of the project",
+        user: process.env.NEW_DB_USER || "No value for environment variable NEW_DB_USER, check .env.local in the root of the project",
+        password: process.env.NEW_DB_PASSWORD || "No value for environment variable NEW_DB_PASSWORD, check .env.local in the root of the project",
+        database: process.env.NEW_DB_DATABASE || "No value for environment variable NEW_DB_DATABASE, check .env.local in the root of the project",
+        port: parseInt(process.env.NEW_DB_PORT || "3306")
+    });
+    //TODO: ssl?
     export async function query(sql: string, params: any | null = null): Promise<any> {
         try {
-            //TODO: ssl?
-            const connection = await mysql.createConnection ({
-                host: process.env.NEW_DB_HOST || "No value for environment variable NEW_DB_HOST, check .env.local in the root of the project",
-                user: process.env.NEW_DB_USER || "No value for environment variable NEW_DB_USER, check .env.local in the root of the project",
-                password: process.env.NEW_DB_PASSWORD || "No value for environment variable NEW_DB_PASSWORD, check .env.local in the root of the project",
-                database: process.env.NEW_DB_DATABASE || "No value for environment variable NEW_DB_DATABASE, check .env.local in the root of the project",
-                port: parseInt(process.env.NEW_DB_PORT || "3306")
-            });
-
-            const [rows] = await connection.execute(sql, params);
-            await connection.end();
+            const [rows] = await pool.execute(sql, params);
             return rows;
         } catch (error) {
             // Ignore errors, in case new db is down
