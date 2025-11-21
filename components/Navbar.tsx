@@ -4,7 +4,7 @@ import styles from './Navbar.module.css';
 export default function Navbar() {
   return (
     <nav className={styles.nav}>
-      <img src="logo.png"/>
+      <img src="logo.png" alt="" width="101" height="101"/>
       <h1>Welcome to our Product Website!</h1>
       <ul className={styles.menu}>
         <li>
