@@ -5,9 +5,18 @@ import CartItem from './CartItem';
 import styles from './CartList.module.css';
 import { useState, useEffect } from 'react';
 
+interface Part {
+    number: number
+    description: string
+    price: number
+    weight: number
+    pictureURL: string
+    inventoryCount: number
+}
+
 export default function CartList(){
     const items = Cart.allItems();
-    const [parts, setParts] = useState<Record<number, any[]>>({});
+    const [parts, setParts] = useState<Record<number, Part[]>>({});
     const [charges, setCharges] = useState(0);
 
     useEffect(() => {
@@ -17,10 +26,10 @@ export default function CartList(){
 
         (async () => {
             const data = await (await fetch(`/api/part?ids=[${numbers.join(",")}]`)).json();
-            const map: Record<number, any> = {};
+            const map: Record<number, Part[]> = {};
             let weightSum = 0;
 
-            data.forEach((part: any) => {
+            data.forEach((part: Part) => {
                 map[part.number] = [part];
                 const quantity = items.find(item => item.number === part.number)?.quantity || 1;
                 weightSum += quantity * part.weight;
