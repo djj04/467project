@@ -33,7 +33,7 @@ export default function ShippingAndHandlingBracketWidget(
 				min="0"
 				id="start-weight"
 				value={startWeight}
-				onInput={ e => setLocalStartWeight((e.target as any).value) }
+				onInput={ e => setLocalStartWeight(parseFloat((e.target as HTMLInputElement).value)) }
 			/>
 			<br />
 			<label htmlFor="end-weight">End weight</label>
@@ -43,7 +43,7 @@ export default function ShippingAndHandlingBracketWidget(
 				min="0"
 				id="end-weight"
 				value={endWeight}
-				onInput={ e => setLocalEndWeight((e.target as any).value) }
+				onInput={ e => setLocalEndWeight(parseFloat((e.target as HTMLInputElement).value)) }
 			/>
 			<br />
 			<label htmlFor="charge">Charge</label>
@@ -53,7 +53,7 @@ export default function ShippingAndHandlingBracketWidget(
 				min="0"
 				id="charge"
 				value={charge}
-				onInput={ e => setLocalCharge((e.target as any).value) }
+				onInput={ e => setLocalCharge(parseFloat((e.target as HTMLInputElement).value)) }
 			/>
 			<br />
 			{
