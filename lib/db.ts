@@ -466,7 +466,7 @@ export class Part {
             // This is incredibly spooky but it's just generating the proper amount of question marks, it should still be safe
             const newRows = await New.query(
                 `SELECT * FROM products WHERE NUMBER IN (${legacyRows.map(()=>'?').join(",")});`,
-                legacyRows.map((e:any)=>e.number).filter((e:number)=>e===undefined?false:true)
+                legacyRows.map((e:{number:number | undefined})=>e.number).filter((e:number | undefined)=>e===undefined?false:true)
             )
             const result: Part[] = []
             for (const row of legacyRows) {
