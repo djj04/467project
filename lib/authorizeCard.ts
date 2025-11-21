@@ -46,9 +46,7 @@ export async function authorizeTransaction(
 	} = await result.json()
 
 	if (!jsonResult.authorization) {
-		console.error(`Transaction ${id} was not authorized!`)
-		console.error(jsonResult)
-		return null
+		throw jsonResult
 	}
 
 	return jsonResult.authorization

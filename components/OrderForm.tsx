@@ -1,14 +1,14 @@
 'use client'
 
 import { Cart } from '@/lib/cart';
-import { Order } from '@/lib/db';
 import styles from './OrderForm.module.css';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function OrderForm () {    
+    const router = useRouter()
     const [formData, setFormData] = useState({
-        firstName: "",
-        lastName: "",
+        name: "",
         emailAddress: "",
         mailingAddress: "",
         ccName: "",
@@ -24,7 +24,7 @@ export default function OrderForm () {
 
     const gatherData = async () => {
         const items = Cart.allItems();
-        const fullName = formData.firstName + " " + formData.lastName;
+        const fullName = formData.name
 
         const customer = {
             name: fullName,
@@ -33,7 +33,7 @@ export default function OrderForm () {
 
         const expiration = {
             month: formData.ccExpirationMonth,
-            year: formData.ccExpirationYear
+            year: formData.ccExpirationYear < 2000 ? 2000 + formData.ccExpirationYear : formData.ccExpirationYear
         };
 
         const card = {
@@ -54,28 +54,26 @@ export default function OrderForm () {
                     })
             });
             const data = await res.json();
+            if (res.status != 200)
+                throw data
             console.log("Order Successfully Created", data);
-        } catch (err) {
+            Cart.clear()
+            router.push(`/orderSuccess?orderID=${encodeURIComponent(data.orderID)}`)
+        } catch (err: any) {
             console.error("Order Not Created", err);
+            alert(`Error: ${err.error}`)
         }
     }
 
     return (
         <div className={styles.customerInfo}>
                 <h3>Enter Your Information: </h3>
-                <div className={styles.nameInfo}>First Name:
+                <div className={styles.nameInfo}>Name:
                     <input  type="text" 
-                            id="firstName" 
-                            placeholder="Enter your first name"
-                            value={formData.firstName}
+                            id="name" 
+                            placeholder="Enter your name"
+                            value={formData.name}
                             onChange={handleChange}
-                    />
-                    Last Name: 
-                    <input  type="text" 
-                            id="lastName"   
-                            placeholder="Enter your last name"
-                            value={formData.lastName}
-                            onChange={handleChange}        
                     />
                 </div>
                 <div className={styles.addressInfo}>

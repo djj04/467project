@@ -7,7 +7,7 @@ export async function POST(req: Request): Promise<Response> {
 		if (!order) {
 			return new Response("Could not find order", { status: 400 })
 		}
-		await order.setStatus("shipped")
+		await order.finalize()
 		console.log(`Should send order confirmation email to ${order.customerEmailAddress} regarding order #${order.id}`)
 		return new Response("", {status: 200})
 	} catch (error) {
