@@ -1,6 +1,6 @@
 "use client"
 
-import { Suspense, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import AdminOrderCard from "./AdminOrderCard";
 
 export default function AdminOrdersList() {
