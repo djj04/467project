@@ -275,8 +275,25 @@ export class Order {
         return result
     }
 
-    public async setStatus(newValue: "authorized" | "shipped") {
-        await New.query("UPDATE orders SET status=? WHERE id=?", [newValue, this.id])
+    /// Sets status to shipped and tracks the items as being removed from the inventory
+    public async finalize() {
+        await New.query("START TRANSACTION")
+        try {
+            const items = await Part.listFromOrder(this)
+            if (items) {
+                for (const item of items) {
+                    if (item.part.inventoryCount < item.quantity) {
+                        throw `Item #${item.part.number} only has ${item.part.inventoryCount} in inventory, but order #${this.id} wants ${item.quantity} of them`
+                    }
+                    await item.part.addInventory(-1 * item.quantity)
+                }
+            }
+            await New.query("UPDATE orders SET status=\"shipped\" WHERE id=?", [this.id])
+            await New.query("COMMIT")
+        } catch (error) {
+            console.error("Error in finalizing order!", this, error)
+            await New.query("ROLLBACK")
+        }
     }
 
     private static fromObject(obj: any): Order | null {
