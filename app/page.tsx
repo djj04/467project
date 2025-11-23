@@ -1,6 +1,7 @@
 import Navbar from '@/components/Navbar';
 import PartsList from '@/components/PartsList';
 import PartsListPaginationNav from '@/components/PartsListPaginationNav';
+import SearchItem from '@/components/SearchItem';
 import  './globals.css';
 
 export default async function Home(
@@ -17,6 +18,7 @@ export default async function Home(
   return (
     <>
     <Navbar />
+    <SearchItem />
     <PartsList pageNumber={pageNumber} />
     <PartsListPaginationNav pageNumber={pageNumber}/>
     </>
