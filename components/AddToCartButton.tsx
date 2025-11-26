@@ -26,6 +26,10 @@ export default function AddToCartButton({partNumber, maxQuantity}: AddToCartButt
 					() => {
 						Cart.add(partNumber, quantityToAdd)
 						setHasBeenAdded(true)
+
+						setTimeout(() => {
+							setHasBeenAdded(false);
+						}, 2000);
 					}
 				}>Add to Cart</button>
 				<div>
