@@ -7,7 +7,11 @@ export default async function AdminInterface() {
 	
     return (
 		<div>
-			<AdminOrdersList />
+			<details open={true}>
+				<summary>All Orders</summary>
+				<AdminOrdersList />
+			</details>
+			<hr />
 			<ShippingAndHandlingAdmin brackets={brackets.map(e=>JSON.parse(JSON.stringify(e)))}/>
 		</div>
     )
