@@ -82,14 +82,14 @@ export default function CartList(){
                     ))}
                 </tbody>
             </table>
-            <table>
+            <table className={styles.totalprice}>
                 <tbody>
                     <tr>
-                        <th className={styles.totalprice}>The price of your parts are: </th><td>${itemstotal.toFixed(2)}</td>
+                        <th>The price of your parts are: </th><td>${itemstotal.toFixed(2)}</td>
                     </tr><tr>
-                        <th className={styles.totalprice}>Shipping and Handling charges: </th><td>${charges?.toFixed(2) ?? 0.00}</td>
+                        <th>Shipping and Handling charges: </th><td>${charges?.toFixed(2) ?? 0.00}</td>
                     </tr><tr>
-                        <th className={styles.totalprice}>Total Price: </th><td>${total.toFixed(2)}</td>
+                        <th>Total Price: </th><td>${total.toFixed(2)}</td>
                     </tr>
                 </tbody>
             </table>
