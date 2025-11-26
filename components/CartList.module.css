@@ -1,6 +1,5 @@
 .list {
-    padding-right: 200px;
-    padding-left: 200px;
+    width: 80%;
 }
 
 .header {
@@ -18,5 +17,14 @@
 }
 
 .totalprice {
-    text-align: center;
+    width: 80%;
+    padding-left: 10%;
+}
+
+.totalprice th {
+    font-weight: normal;
+}
+
+.totalprice td {
+    font-weight: bold;
 }

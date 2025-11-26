@@ -22,7 +22,8 @@ export default function OrderForm () {
         setFormData((prev) => ({ ...prev, [id]: value }))
     }
 
-    const gatherData = async () => {
+    const gatherData = async (event: any) => {
+        event.preventDefault()
         const items = Cart.allItems();
         const fullName = formData.name
 
@@ -67,9 +68,9 @@ export default function OrderForm () {
     }
 
     return (
-        <div className={styles.customerInfo}>
+        <form className={styles.customerInfo} onSubmit={gatherData}>
                 <h3>Enter Your Information: </h3>
-                <div className={styles.nameInfo}>Name:
+                <div className={styles.nameInfo}><label htmlFor="name">Name:</label>
                     <input  type="text" 
                             id="name" 
                             placeholder="Enter your name"
@@ -78,52 +79,64 @@ export default function OrderForm () {
                     />
                 </div>
                 <div className={styles.addressInfo}>
-                    Email Address:
-                    <input  type="text" 
-                            id="emailAddress" 
-                            placeholder="Enter your email address"
-                            value={formData.emailAddress}
-                            onChange={handleChange}
-                    />
-                    Mailing Address:
-                    <input  type="text" 
-                            id="mailingAddress" 
-                            placeholder="Enter your mailing address"
-                            value={formData.mailingAddress}
-                            onChange={handleChange}
-                    />
+                    <div>
+                        <label htmlFor="emailAddress">Email Address:</label>
+                        <input  type="text" 
+                                id="emailAddress" 
+                                placeholder="Enter your email address"
+                                value={formData.emailAddress}
+                                onChange={handleChange}
+                        />
+                    </div>
+                    <div>
+                        <label htmlFor="mailingAddress">Mailing Address:</label>
+                        <input  type="text" 
+                                id="mailingAddress" 
+                                placeholder="Enter your mailing address"
+                                value={formData.mailingAddress}
+                                onChange={handleChange}
+                        />
+                    </div>
                 </div>
                 <div className={styles.ccInfo}>
-                    Name on Credit Card:
-                    <input  type="text" 
-                            id="ccName" 
-                            placeholder="Enter name on credit card"
-                            value={formData.ccName}
-                            onChange={handleChange}
-                    />
-                    Credit Card Number:
-                    <input  type="text" 
-                            id="ccNumber" 
-                            placeholder="Enter your credit card number"
-                            value={formData.ccNumber}
-                            onChange={handleChange}
-                    />
-                    Expiration Month: 
-                    <input  type="text" 
-                            id="ccExpirationMonth" 
-                            placeholder="Enter your Expiration Month"
-                            value={formData.ccExpirationMonth}
-                            onChange={handleChange}
-                    />
-                    Expiration Year: 
-                    <input  type="text" 
-                            id="ccExpirationYear" 
-                            placeholder="Enter your Expiration Year"
-                            value={formData.ccExpirationYear}
-                            onChange={handleChange}
-                    />
+                    <div>
+                        <label htmlFor="ccName">Name on Credit Card:</label>
+                        <input  type="text" 
+                                id="ccName" 
+                                placeholder="Enter name on credit card"
+                                value={formData.ccName}
+                                onChange={handleChange}
+                        />
+                    </div>
+                    <div>
+                        <label htmlFor="ccNumber">Credit Card Number:</label>
+                        <input  type="text" 
+                                id="ccNumber" 
+                                placeholder="Enter your credit card number"
+                                value={formData.ccNumber}
+                                onChange={handleChange}
+                        />
+                    </div>
+                    <div>
+                        <label htmlFor="ccExpirationMonth">Expiration Month: </label>
+                        <input  type="number" 
+                                id="ccExpirationMonth" 
+                                placeholder="Enter your Expiration Month"
+                                value={formData.ccExpirationMonth}
+                                onChange={handleChange}
+                                min="1"
+                                max="12"
+                        />
+                        <label htmlFor="ccExpirationYear">Year: </label>
+                        <input  type="number" 
+                                id="ccExpirationYear" 
+                                placeholder="Enter your Expiration Year"
+                                value={formData.ccExpirationYear}
+                                onChange={handleChange}
+                        />
+                    </div>
                 </div>
-                <button onClick={gatherData} className={styles.submitButton}>Submit Order</button>
-            </div>
+                <input type="submit" className={styles.submitButton} value="Submit Order" />
+            </form>
     )
 }
