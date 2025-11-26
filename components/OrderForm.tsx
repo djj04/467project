@@ -119,14 +119,16 @@ export default function OrderForm () {
                     </div>
                     <div>
                         <label htmlFor="ccExpirationMonth">Expiration Month: </label>
-                        <input  type="text" 
+                        <input  type="number" 
                                 id="ccExpirationMonth" 
                                 placeholder="Enter your Expiration Month"
                                 value={formData.ccExpirationMonth}
                                 onChange={handleChange}
+                                min="1"
+                                max="12"
                         />
-                        <label htmlFor="ccExpirationYear">Expiration Year: </label>
-                        <input  type="text" 
+                        <label htmlFor="ccExpirationYear">Year: </label>
+                        <input  type="number" 
                                 id="ccExpirationYear" 
                                 placeholder="Enter your Expiration Year"
                                 value={formData.ccExpirationYear}
