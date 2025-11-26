@@ -1,0 +1,17 @@
+.cartText {
+    text-align: center;
+}
+
+.cartOut {
+    font-size: 22px;
+}
+
+.buttonQuantity {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.cartLabel {
+    width: 55px;
+}

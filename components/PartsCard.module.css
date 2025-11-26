@@ -3,8 +3,8 @@
     flex-direction: column;
     border: 2px solid black;
     width: 300px;
-    padding: 10px;
-    height: 450px;
+    padding: 15px;
+    height: 500px;
     background-color: lightblue;
     justify-content: center;
 }
@@ -25,7 +25,13 @@
 .priceamtlayout {
     display: flex;
     justify-content: space-between;
-    padding: 10px;
+    align-items: center;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.price {
+    font-size: 30px;
 }
 
 .cart {

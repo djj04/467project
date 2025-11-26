@@ -2,6 +2,7 @@
 
 import * as Cart from "@/lib/cart"
 import { useState } from "react"
+import styles from './AddToCartButton.module.css';
 
 export type AddToCartButtonProps = {
 	partNumber: number,
@@ -12,26 +13,32 @@ export default function AddToCartButton({partNumber, maxQuantity}: AddToCartButt
 	const [quantityToAdd, changeQuantityToAdd] = useState(1)
 	const [hasBeenAdded, setHasBeenAdded] = useState(false)
 	if (maxQuantity < 1)
-		return <p>Out of stock</p>
+		return <p className={styles.cartOut}>Out of stock</p>
 	return (
 		<div>
-			<button onClick={
-				() => {
-					Cart.add(partNumber, quantityToAdd)
-					setHasBeenAdded(true)
-				}
-			}>Add to Cart</button>
-			<label>Quantity</label>
-			<input
-				type="number"
-				min="1"
-				max={maxQuantity}
-				value={quantityToAdd}
-				onChange={e=>changeQuantityToAdd(parseInt(e.target.value))}
-			/>
 			{
-				hasBeenAdded ? (<p>Added to cart!</p>) : null
+				<p className={styles.cartText}>
+					{hasBeenAdded ? "Added to Cart!" : "\u00A0"}
+				</p>
 			}
+			<div className={styles.buttonQuantity}>
+				<button onClick={
+					() => {
+						Cart.add(partNumber, quantityToAdd)
+						setHasBeenAdded(true)
+					}
+				}>Add to Cart</button>
+				<div>
+					<label>Quantity:</label>
+					<input className={styles.cartLabel}
+						type="number"
+						min="1"
+						max={maxQuantity}
+						value={quantityToAdd}
+						onChange={e=>changeQuantityToAdd(parseInt(e.target.value))}
+					/>
+				</div>
+			</div>
 		</div>
 	)
 }
