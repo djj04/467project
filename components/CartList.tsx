@@ -60,29 +60,39 @@ export default function CartList(){
     const total = itemstotal + charges;
 
     return (
-        <div className={styles.list}>
-            <ul className={styles.header}>
-                <h3>Part Number: </h3>
-                <h3>Part Name: </h3>
-                <h3>Quantity: </h3>
-                <h3>Subtotal: </h3>
-            </ul>
-            <ul className={styles.items}>
-                {items.map(item=>(
-                    <li key={item.number}>
-                        <CartItem
-                            number={item.number}
-                            quantity={item.quantity}
-                            part={parts[item.number] ?? [{description: "Loading", price: 0}]}
-                        />
-                    </li>
-                ))}
-                <li>
-                    <h2 className={styles.totalprice}>The price of your parts are: ${itemstotal.toFixed(2)}</h2>
-                    <h2 className={styles.totalprice}>Shipping and Handling prices: ${charges?.toFixed(2) ?? 0.00}</h2>
-                    <h2 className={styles.totalprice}>Total Price: ${total.toFixed(2)}</h2>
-                </li>
-            </ul>
-        </div>
+        <>
+            <table className={styles.list}>
+                <thead>
+                    <tr className={styles.header}>
+                        <th>Part Number: </th>
+                        <th>Part Name: </th>
+                        <th>Quantity: </th>
+                        <th>Subtotal: </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {items.map(item=>(
+                        <tr key={item.number}>
+                            <CartItem
+                                number={item.number}
+                                quantity={item.quantity}
+                                part={parts[item.number] ?? [{description: "Loading", price: 0}]}
+                            />
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+            <table>
+                <tbody>
+                    <tr>
+                        <th className={styles.totalprice}>The price of your parts are: </th><td>${itemstotal.toFixed(2)}</td>
+                    </tr><tr>
+                        <th className={styles.totalprice}>Shipping and Handling charges: </th><td>${charges?.toFixed(2) ?? 0.00}</td>
+                    </tr><tr>
+                        <th className={styles.totalprice}>Total Price: </th><td>${total.toFixed(2)}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </>
     )
 }
