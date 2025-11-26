@@ -21,6 +21,7 @@
     color: black;
     border: 2px solid black;
     padding: 20px;
+    white-space: nowrap;
 }
 
 .menu a:hover {
