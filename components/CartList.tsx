@@ -72,7 +72,7 @@ export default function CartList(){
                 </thead>
                 <tbody>
                     {items.map(item=>(
-                        <tr key={item.number}>
+                        <tr key={item.number} className={styles.CartItem}>
                             <CartItem
                                 number={item.number}
                                 quantity={item.quantity}

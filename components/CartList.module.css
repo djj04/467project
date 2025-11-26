@@ -1,5 +1,6 @@
 .list {
     width: 80%;
+    padding-bottom: 1em;
 }
 
 .header {
@@ -27,4 +28,12 @@
 
 .totalprice td {
     font-weight: bold;
+}
+
+.CartItem {
+    display: grid;
+    grid-template-columns: 300px 300px 300px 300px;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
 }
