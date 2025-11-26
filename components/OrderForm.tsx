@@ -22,7 +22,8 @@ export default function OrderForm () {
         setFormData((prev) => ({ ...prev, [id]: value }))
     }
 
-    const gatherData = async () => {
+    const gatherData = async (event: any) => {
+        event.preventDefault()
         const items = Cart.allItems();
         const fullName = formData.name
 
@@ -67,7 +68,7 @@ export default function OrderForm () {
     }
 
     return (
-        <div className={styles.customerInfo}>
+        <form className={styles.customerInfo} onSubmit={gatherData}>
                 <h3>Enter Your Information: </h3>
                 <div className={styles.nameInfo}>Name:
                     <input  type="text" 
@@ -123,7 +124,7 @@ export default function OrderForm () {
                             onChange={handleChange}
                     />
                 </div>
-                <button onClick={gatherData} className={styles.submitButton}>Submit Order</button>
-            </div>
+                <input type="submit" className={styles.submitButton} value="Submit Order" />
+            </form>
     )
 }
