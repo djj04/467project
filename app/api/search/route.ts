@@ -22,11 +22,11 @@ export async function GET(request: Request)
         }
 
         //Search By Part Name
-        const allParts = await Part.list(0)
+        //TODO: Pagination
+        const allParts = await Part.listLike(`%${query}%`, 0)
         if (allParts)
         {
-            const filtered = allParts.filter(p => p.description.toLowerCase().includes(query.toLowerCase()))
-            res = res.concat(filtered); 
+            res = res.concat(allParts); 
         }
 
         return NextResponse.json(res);

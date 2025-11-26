@@ -508,6 +508,35 @@ export class Part {
         }
     }
 
+    /// Get a list of `Part`s for a given page, with a filter. The first page is page 0
+    public static async listLike(query: string, page: number): Promise<Part[] | null> {
+        try {
+            const legacyRows = await Legacy.query("SELECT * FROM parts WHERE LOWER(description) LIKE LOWER(?) LIMIT ? OFFSET ?;", [query, this.AMOUNT_PER_PAGE, this.AMOUNT_PER_PAGE * page])
+            if (legacyRows.length <= 0) {
+                return []
+            }
+            // This is incredibly spooky but it's just generating the proper amount of question marks, it should still be safe
+            const newRows = await New.query(
+                `SELECT * FROM products WHERE NUMBER IN (${legacyRows.map(()=>'?').join(",")});`,
+                legacyRows.map((e:{number:number | undefined})=>e.number).filter((e:number | undefined)=>e===undefined?false:true)
+            )
+            const result: Part[] = []
+            for (const row of legacyRows) {
+                // eslint-disable-next-line
+                const rowInNewDB = newRows.find((newRow: any) => newRow.number == row.number)
+                const amountInInventory = !!rowInNewDB ? rowInNewDB.count : 0
+                const part = Part.fromObject(row, amountInInventory)
+                if (!part)
+                    continue
+                result.push(part)
+            }
+            return result
+        } catch (error) {
+            console.error(error)
+            return null
+        }
+    }
+
     /// Get a list of `Part`s that are in a given `Order`.
     public static async listFromOrder(order: Order): Promise<{part: Part, quantity: number}[] | null> {
         try {
