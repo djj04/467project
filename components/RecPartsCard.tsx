@@ -17,7 +17,7 @@ export default function RecPartsCard({part}: CardProps) {
                 <p>Stock Quantity: {part.inventoryCount}</p>
             </div>
             <div className={styles.cart}>
-                <UpdateQuantityButton partNumber={part.number}/>
+                <UpdateQuantityButton partNumber={part.number} inStockQuantity={part.inventoryCount}/>
             </div>
         </div>
     )
