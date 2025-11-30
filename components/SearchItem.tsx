@@ -1,44 +1,34 @@
 "use client"
 
-import { useState } from "react"
-import PartsCard from "./PartsCard"
 import { Part } from "@/lib/db"
-import styles from "./PartsCard.module.css"
+import { useState } from "react"
 
-export default function SearchItem() {
-    const [query, setQuery] = useState("")
-    const [results, setResults] = useState<Part[]>([])
+type SearchItemProps = {
+  onResults: (results: Part[]) => void
+}
 
-    const handleSearch = async () => {
-        if (!query) {
-            setResults([])
-            return
-        }
+export default function SearchItem({ onResults }: SearchItemProps) {
+  const [query, setQuery] = useState("")
 
-
-        const res = await fetch(`/api/search?query=${encodeURIComponent(query)}`)
-        const list = await res.json()
-        setResults(list)
-
+  const handleSearch = async () => {
+    if (!query) {
+      onResults([])
+      return
     }
+    const res = await fetch(`/api/search?query=${encodeURIComponent(query)}`)
+    const list: Part[] = await res.json()
+    onResults(list)
+  }
 
-    return (
-        <div>
-            <input
-                type="text"
-                value={query}
-                placeholder="Search Part Name or Number"
-                onChange={(e) => setQuery(e.target.value)}
-            />
-            <button onClick={handleSearch}>Search</button>
-
-            <ul className={styles.items}>
-                {results.map((part => 
-                    <li key={part.number}>
-                        <PartsCard part={part} />
-                    </li>
-                ))}
-            </ul>
-        </div>
-    )
+  return (
+    <div>
+      <input
+        type="text"
+        value={query}
+        placeholder="Search Part Name or Number"
+        onChange={(e) => setQuery(e.target.value)}
+      />
+      <button onClick={handleSearch}>Search</button>
+    </div>
+  )
 }
