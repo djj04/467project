@@ -1,8 +1,6 @@
 import Navbar from '@/components/Navbar';
-import PartsList from '@/components/PartsList';
-import PartsListPaginationNav from '@/components/PartsListPaginationNav';
-import SearchItem from '@/components/SearchItem';
 import  './globals.css';
+import PartToggle from '@/components/PartToggle';
 
 export default async function Home(
   props: {
@@ -18,9 +16,7 @@ export default async function Home(
   return (
     <>
     <Navbar />
-    <SearchItem />
-    <PartsList pageNumber={pageNumber} />
-    <PartsListPaginationNav pageNumber={pageNumber}/>
+    <PartToggle pageNumber={pageNumber}/>
     </>
   );
 }
