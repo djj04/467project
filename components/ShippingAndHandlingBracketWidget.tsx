@@ -3,8 +3,9 @@ import { useState } from "react"
 import UnsavedChangesButton from "./UnsavedChangesButton"
 
 export default function ShippingAndHandlingBracketWidget(
-	{bracket}: {
-		bracket: {startWeight: number, endWeight: number, charge: number}
+	{bracket, onDelete}: {
+		bracket: {bracketId: number, startWeight: number, endWeight: number, charge: number}
+		onDelete?: (bracketId: number) => void
 	}
 ) {
 	const [mostRecentlySaved, setMostRecentlySaved] = useState(bracket)
@@ -17,11 +18,26 @@ export default function ShippingAndHandlingBracketWidget(
 			method: "POST",
 			body: JSON.stringify({
 				old: mostRecentlySaved,
-				new: {startWeight, endWeight, charge}
+				new: {bracketId: bracket.bracketId, startWeight, endWeight, charge}
 			})
 		})
 		if (response.status == 200)
-			setMostRecentlySaved({startWeight, endWeight, charge})
+			setMostRecentlySaved({bracketId: bracket.bracketId, startWeight, endWeight, charge})
+	}
+
+	const deleteBracket = async () => {
+		if (!confirm("Are you sure you want to delete this bracket?")) {
+			return
+		}
+		const response = await fetch("/api/deleteShippingAndHandlingBracket", {
+			method: "POST",
+			body: JSON.stringify({ bracketId: bracket.bracketId })
+		})
+		if (response.status == 200 && onDelete) {
+			onDelete(bracket.bracketId)
+		} else {
+			alert(await response.text())
+		}
 	}
 	
 	return (
@@ -63,6 +79,7 @@ export default function ShippingAndHandlingBracketWidget(
 					charge != mostRecentlySaved.charge
 				) ? <UnsavedChangesButton /> : null
 			}
+			<button type="button" onClick={deleteBracket} style={{color: 'red'}}>Delete bracket</button>
 		</form>
 	)
 }

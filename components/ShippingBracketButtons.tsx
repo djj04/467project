@@ -2,14 +2,16 @@
 
 import { Dispatch, SetStateAction } from "react"
 
-export default function NewShippingAndHandlingBracketButton(
+export default function ShippingBracketButtons(
 	{displayedBrackets, setDisplayedBrackets}: {
 		displayedBrackets: {
+			bracketId: number,
 			startWeight: number,
 			endWeight: number,
 			charge: number
 		}[],
 		setDisplayedBrackets: Dispatch<SetStateAction<{
+			bracketId: number,
 			startWeight: number,
 			endWeight: number,
 			charge: number
@@ -29,6 +31,26 @@ export default function NewShippingAndHandlingBracketButton(
 			alert(await response.text())
 		)
 	}
+
+	const deleteBracket = async (bracketId: number) => {
+		if (!confirm("Are you sure you want to delete this bracket?")) {
+			return
+		}
+		const response = await fetch("/api/deleteShippingAndHandlingBracket", {
+			method: "POST",
+			body: JSON.stringify({ bracketId })
+		})
+		if (response.status == 200) {
+			const newDisplayedBrackets = displayedBrackets.filter(bracket => bracket.bracketId !== bracketId)
+			setDisplayedBrackets(newDisplayedBrackets)
+		} else {
+			alert(await response.text())
+		}
+	}
 	
-	return (<button onClick={newBracket}>Add new bracket</button>)
+	return (
+		<div>
+			<button onClick={newBracket}>Add new bracket</button>
+		</div>
+	)
 }

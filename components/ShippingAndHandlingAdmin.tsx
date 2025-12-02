@@ -1,11 +1,12 @@
 "use client"
 import ShippingAndHandlingBracketWidget from "./ShippingAndHandlingBracketWidget"
-import NewShippingAndHandlingBracketButton from "./NewShippingAndHandlingButton"
+import NewShippingAndHandlingBracketButton from "./ShippingBracketButtons"
 import { useState } from "react"
 
 export default function ShippingAndHandlingAdmin(
 	{brackets}: {
 		brackets: {
+			bracketId: number,
 			startWeight: number,
 			endWeight: number,
 			charge: number
@@ -13,6 +14,11 @@ export default function ShippingAndHandlingAdmin(
 }
 ) {
 	const [displayedBrackets, setDisplayedBrackets] = useState(brackets)
+
+	const handleDeleteBracket = (bracketId: number) => {
+		const newBrackets = displayedBrackets.filter(bracket => bracket.bracketId !== bracketId)
+		setDisplayedBrackets(newBrackets)
+	}
 	
     return (
 		<div>
@@ -20,10 +26,11 @@ export default function ShippingAndHandlingAdmin(
 			<ul>
 				{
 					displayedBrackets.map(bracket => (
-						<li key={bracket.startWeight}>
-							<ShippingAndHandlingBracketWidget bracket={
-								JSON.parse(JSON.stringify(bracket))
-							} />
+						<li key={bracket.bracketId}>
+							<ShippingAndHandlingBracketWidget 
+								bracket={JSON.parse(JSON.stringify(bracket))}
+								onDelete={handleDeleteBracket}
+							/>
 						</li>
 					))
 				}

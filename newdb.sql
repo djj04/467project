@@ -34,10 +34,10 @@ CREATE TABLE orders (
 );
 
 CREATE TABLE shipping_and_handling_brackets (
+    bracket_id INT AUTO_INCREMENT PRIMARY KEY,
     start_weight FLOAT(10,2) NOT NULL,
     end_weight FLOAT(10,2) NOT NULL,
-    charge FLOAT(8,2) NOT NULL,
-    PRIMARY KEY (start_weight, end_weight)
+    charge FLOAT(8,2) NOT NULL
 );
 
 CREATE TABLE products_in_orders (

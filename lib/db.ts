@@ -48,6 +48,7 @@ const New = {
 export class ShippingAndHandlingBracket {
     public static HIGHEST_POSSIBLE_WEIGHT = 99999999
 
+    bracketId: number
     startWeight: number
     endWeight: number
     charge: number
@@ -71,32 +72,34 @@ export class ShippingAndHandlingBracket {
             SET start_weight = ?,
                 end_weight = ?,
                 charge = ?
-            WHERE start_weight = ? AND
-                  end_weight = ? AND
-                  charge = ?;
+            WHERE bracket_id = ?;
         `, [
             newValue.startWeight,
             newValue.endWeight,
             newValue.charge,
-            oldValue.startWeight,
-            oldValue.endWeight,
-            oldValue.charge
+            oldValue.bracketId
         ])
     }
 
     /// Throws
     public static async addNew(startWeight: number, endWeight: number, charge: number): Promise<ShippingAndHandlingBracket | null> {
-        await New.query(`
-            INSERT INTO shipping_and_handling_brackets
-                (
-                    start_weight,
-                    end_weight,
-                    charge
-                )
-            VALUES (?, ?, ?)
-        `, [startWeight, endWeight, charge])
+        try {
+            const [result] = await New.pool.execute(`
+                INSERT INTO shipping_and_handling_brackets
+                    (
+                        start_weight,
+                        end_weight,
+                        charge
+                    )
+                VALUES (?, ?, ?)
+            `, [startWeight, endWeight, charge])
 
-        return ShippingAndHandlingBracket.get(startWeight, endWeight)
+            const bracketId = (result as any).insertId
+            return ShippingAndHandlingBracket.getById(bracketId)
+        } catch (error) {
+            console.error(error)
+            return null
+        }
     }
 
     /// Throws
@@ -105,21 +108,34 @@ export class ShippingAndHandlingBracket {
         return ShippingAndHandlingBracket.fromObject(rows[0] || {})
     }
 
+    /// Throws
+    public static async getById(bracketId: number): Promise<ShippingAndHandlingBracket | null> {
+        const rows = await New.query("SELECT * FROM shipping_and_handling_brackets WHERE bracket_id=?", [bracketId])
+        return ShippingAndHandlingBracket.fromObject(rows[0] || {})
+    }
+
+    /// Throws
+    public static async delete(bracketId: number): Promise<void> {
+        await New.query("DELETE FROM shipping_and_handling_brackets WHERE bracket_id=?", [bracketId])
+    }
+
     private static fromObject(
         // eslint-disable-next-line
-        {start_weight: startWeight, end_weight: endWeight, charge}: any
+        {bracket_id: bracketId, start_weight: startWeight, end_weight: endWeight, charge}: any
     ): ShippingAndHandlingBracket | null {
         if (
+            typeof bracketId != "number" ||
             typeof startWeight != "number" ||
             typeof endWeight != "number" ||
             typeof charge != "number"
         ) {
             return null
         }
-        return new ShippingAndHandlingBracket(startWeight, endWeight, charge)
+        return new ShippingAndHandlingBracket(bracketId, startWeight, endWeight, charge)
     }
     
-    private constructor(startWeight: number, endWeight: number, charge: number) {
+    private constructor(bracketId: number, startWeight: number, endWeight: number, charge: number) {
+        this.bracketId = bracketId
         this.startWeight = startWeight
         this.endWeight = endWeight
         this.charge = charge
