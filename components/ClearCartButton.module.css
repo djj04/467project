@@ -1,0 +1,20 @@
+.clear-cart-button {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+}
+
+.clear-cart-button:hover {
+  background-color: #c82333;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+.clear-cart-button:active {
+  transform: scale(0.97);
+}

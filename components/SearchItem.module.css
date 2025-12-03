@@ -10,8 +10,17 @@
     font-size: 20px;
 }
 
+.inputWrapper {
+    position: relative;
+    display: flex;
+    flex: 1;
+    max-width: 400px;
+}
+
 .searchInput {
+    width: 100%;
     font-size: 20px;
+    padding: 8px 32px 8px 8px;
 }
 
 .searchInput:hover {
@@ -19,7 +28,22 @@
     color: black;
 }
 
+.clearButton {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: #aaa;
+}
+
+.clearButton:hover {
+    color: #333;
+}
+
 .submitButton {
     font-size: 20px;
-
 }
