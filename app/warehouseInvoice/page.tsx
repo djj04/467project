@@ -1,4 +1,4 @@
-import { Order, Part } from "@/lib/db";
+import { Order, Part, ShippingAndHandlingBracket, shippingAndHandlingFor } from "@/lib/db";
 import { Metadata } from "next";
 
 
@@ -29,6 +29,15 @@ export default async function WarehouseInvoice(
 	if (!parts) {
 		return (<h1>Empty order</h1>)
 	}
+
+	const totalWeight = parts?.reduce((sum, part) => sum + (part.quantity * part.part.weight), 0) || 0
+	
+	let shippingCharge = 0
+	try {
+		shippingCharge = await shippingAndHandlingFor(totalWeight)
+	} catch (error) {
+		console.error("Could not determine shipping charge:", error)
+	}
 	
 	return (
 	<>
@@ -42,7 +51,12 @@ export default async function WarehouseInvoice(
 				))
 			}
 		</ul>
-		<p>Total price: ${parts.reduce((total, part) => total + part.part.price * part.quantity, 0)}</p>
+		<hr />
+		<h2>Order Summary</h2>
+		<p><strong>Subtotal: </strong> ${parts.reduce((total, part) => total + part.part.price * part.quantity, 0).toFixed(2)}</p>
+		<p>Total Weight: {totalWeight.toFixed(2)}kg</p>
+		<p>Shipping & Handling Charge: ${shippingCharge.toFixed(2)}</p>
+		<p><strong>Total price:</strong> ${(parts.reduce((total, part) => total + part.part.price * part.quantity, 0) + shippingCharge).toFixed(2)}</p>
 	</>
 	);
 }
