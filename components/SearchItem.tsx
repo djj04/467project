@@ -21,14 +21,14 @@ export default function SearchItem({ onResults }: SearchItemProps) {
   }
 
   return (
-    <div>
+    <form onSubmit={(e)=>{e.preventDefault();handleSearch()}}>
       <input
         type="text"
         value={query}
         placeholder="Search Part Name or Number"
         onChange={(e) => setQuery(e.target.value)}
       />
-      <button onClick={handleSearch}>Search</button>
-    </div>
+      <input type="submit" value="Search"/>
+    </form>
   )
 }
