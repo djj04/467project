@@ -5,6 +5,7 @@ export async function GET(request: Request)
 {
     const { searchParams } = new URL(request.url)
     const query = searchParams.get("query") || ""
+    const page = searchParams.get("page") || ""
 
     try
     {
@@ -23,7 +24,7 @@ export async function GET(request: Request)
 
         //Search By Part Name
         //TODO: Pagination
-        const allParts = await allPartsFor(query, 0)
+        const allParts = await allPartsFor(query, parseInt(page) || 0)
         if (allParts)
         {
             res = res.concat(allParts); 
