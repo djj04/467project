@@ -1,5 +1,12 @@
 import Navbar from "@/components/Navbar";
 import { Order } from "@/lib/db";
+import { Metadata } from "next";
+
+
+export const metadata: Metadata = {
+  title: "Success!",
+  description: "Successfully created an order",
+};
 
 export default async function OrderSuccess(
 	props: {

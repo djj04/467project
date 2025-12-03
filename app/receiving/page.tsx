@@ -2,6 +2,13 @@ import Navbar from '@/components/Navbar';
 import RecPartsList from '@/components/RecPartsList';
 import PartsListPaginationNav from '@/components/PartsListPaginationNav';
 import SearchItem from '@/components/SearchItem';
+import { Metadata } from 'next';
+
+
+export const metadata: Metadata = {
+  title: "Receiving desk interface",
+  description: "Interface to run at the warehouse receiving desk for registering new inventory",
+};
 
 export default async function Receiving(
   props: {

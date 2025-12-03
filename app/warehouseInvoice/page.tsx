@@ -1,4 +1,11 @@
 import { Order, Part } from "@/lib/db";
+import { Metadata } from "next";
+
+
+export const metadata: Metadata = {
+  title: "Invoice",
+  description: "",
+};
 
 export default async function WarehouseInvoice(
 	props: {

@@ -1,5 +1,12 @@
 import Navbar from '@/components/Navbar';
 import WarehouseShipmentInterface from '@/components/WarehouseShipmentInterface';
+import { Metadata } from 'next';
+
+
+export const metadata: Metadata = {
+  title: "Warehouse interface",
+  description: "Interface for running in the warehouse for fulfilling orders",
+};
 
 export default async function Warehouse(props: {
 		searchParams?: Promise<{
