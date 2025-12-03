@@ -1,0 +1,25 @@
+.itemForm {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    padding: 20px;
+}
+
+.myIcon {
+    font-size: 20px;
+}
+
+.searchInput {
+    font-size: 20px;
+}
+
+.searchInput:hover {
+    background-color: #F0F0F0;
+    color: black;
+}
+
+.submitButton {
+    font-size: 20px;
+
+}

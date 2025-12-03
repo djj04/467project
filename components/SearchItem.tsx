@@ -6,6 +6,7 @@ import { far } from '@fortawesome/free-regular-svg-icons'
 import { fas } from '@fortawesome/free-solid-svg-icons'
 import { useState } from "react"
 import { library } from "@fortawesome/fontawesome-svg-core"
+import styles from './SearchItem.module.css';
 
 type SearchItemProps = {
   onResults: (results: Part[]) => void
@@ -23,15 +24,17 @@ export default function SearchItem({ onResults }: SearchItemProps) {
   }
 
   return (
-    <form onSubmit={(e)=>{e.preventDefault();handleSearch()}}>
-      <FontAwesomeIcon icon="magnifying-glass" />
-      <input
+    <form 
+      className={styles.itemForm}
+      onSubmit={(e)=>{e.preventDefault();handleSearch()}}>
+      <FontAwesomeIcon className={styles.myIcon} icon="magnifying-glass" />
+      <input className={styles.searchInput}
         type="text"
         value={query}
         placeholder="Search Part Name or Number"
         onChange={(e) => setQuery(e.target.value)}
       />
-      <input type="submit" value="Search"/>
+      <input className={styles.submitButton} type="submit" value="Search"/>
     </form>
   )
 }
