@@ -1,21 +1,32 @@
+"use client"
+
 import { Part } from "@/lib/db"
 import RecPartsCard from "./RecPartsCard"
 import styles from "./PartsList.module.css"
+import SearchItem from "./SearchItem"
+import { useState } from "react"
 
-export default async function RecPartsList({pageNumber}: {pageNumber: number}) {
-    const parts = await Part.list(pageNumber)
+export default function RecPartsList({initialParts}: {initialParts: Part[] | null}) {
+    const [parts, setParts] = useState(initialParts)
+    
+    const handleSearch = (searchResults: Part[]) => {
+      setParts(searchResults)
+    }
     if (!parts || parts.length <= 0) {
         return (<p>No parts :(</p>)
     }
     return (
-        <ul className={styles.items}>
-            {parts.map(part=>(
-                <li key={part.number}>
-                    <RecPartsCard
-                        part={part}
-                    />
-                </li>
-            ))}
-        </ul>
+        <>
+            <SearchItem onResults={handleSearch}/>
+            <ul className={styles.items}>
+                {parts.map((part: Part)=>(
+                    <li key={part.number}>
+                        <RecPartsCard
+                            part={part}
+                        />
+                    </li>
+                ))}
+            </ul>
+        </>
     )
 }

@@ -1,8 +1,8 @@
 import Navbar from '@/components/Navbar';
 import RecPartsList from '@/components/RecPartsList';
 import PartsListPaginationNav from '@/components/PartsListPaginationNav';
-import SearchItem from '@/components/SearchItem';
 import { Metadata } from 'next';
+import { Part } from '@/lib/db';
 
 
 export const metadata: Metadata = {
@@ -21,11 +21,12 @@ export default async function Receiving(
       (await props.searchParams).page || "0"
     )
 
+    const parts = JSON.parse(JSON.stringify(await Part.list(pageNumber)))
+
     return (
         <>
         <Navbar />
-        <SearchItem />
-        <RecPartsList pageNumber={pageNumber} />
+        <RecPartsList initialParts={parts} />
         <PartsListPaginationNav pageNumber={pageNumber}/>
         </>
     )
