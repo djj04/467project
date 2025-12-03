@@ -20,10 +20,11 @@ export default function PartToggle({ pageNumber }: ToggleProps) {
     const getList = async () => {
       const res = await fetch("/api/search?query=&page=" + pageNumber)
       const data: Part[] = await res.json()
+      console.log(data, pageNumber)
       setList(data)
     }
     getList()
-  }, [])
+  }, [pageNumber])
 
   const handleSearch = (searchResults: Part[]) => {
     setResults(searchResults)
