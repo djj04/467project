@@ -1,13 +1,19 @@
 "use client"
 
 import { Part } from "@/lib/db"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { far } from '@fortawesome/free-regular-svg-icons'
+import { fas } from '@fortawesome/free-solid-svg-icons'
 import { useState } from "react"
+import { library } from "@fortawesome/fontawesome-svg-core"
 
 type SearchItemProps = {
   onResults: (results: Part[]) => void
 }
 
 export default function SearchItem({ onResults }: SearchItemProps) {
+  library.add(fas, far)
+  
   const [query, setQuery] = useState("")
 
   const handleSearch = async () => {
@@ -18,6 +24,7 @@ export default function SearchItem({ onResults }: SearchItemProps) {
 
   return (
     <form onSubmit={(e)=>{e.preventDefault();handleSearch()}}>
+      <FontAwesomeIcon icon="magnifying-glass" />
       <input
         type="text"
         value={query}
