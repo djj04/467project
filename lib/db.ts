@@ -46,7 +46,7 @@ const New = {
 }
 
 export class ShippingAndHandlingBracket {
-    public static HIGHEST_POSSIBLE_WEIGHT = 99999999
+    public static HIGHEST_POSSIBLE_WEIGHT = 9999999.99
 
     bracketId: number
     startWeight: number

@@ -8,6 +8,6 @@ export async function POST(req: Request): Promise<Response> {
         return new Response("", {status: 200})
     } catch (error) {
 		console.error(error)
-        return new Response("", { status: 500 })
+        return new Response("Failed to delete, unknown error", { status: 500 })
     }
 }

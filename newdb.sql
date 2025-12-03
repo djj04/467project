@@ -35,9 +35,9 @@ CREATE TABLE orders (
 
 CREATE TABLE shipping_and_handling_brackets (
     bracket_id INT AUTO_INCREMENT PRIMARY KEY,
-    start_weight FLOAT(10,2) NOT NULL,
-    end_weight FLOAT(10,2) NOT NULL,
-    charge FLOAT(8,2) NOT NULL
+    start_weight DECIMAL(10,2) NOT NULL,
+    end_weight DECIMAL(10,2) NOT NULL,
+    charge DECIMAL(8,2) NOT NULL
 );
 
 CREATE TABLE products_in_orders (
@@ -51,4 +51,4 @@ CREATE TABLE products_in_orders (
 
 -- Add an initial shipping and handling bracket
 
-INSERT INTO shipping_and_handling_brackets (start_weight, end_weight, charge) VALUES (0, 10000000000, 0);
+INSERT INTO shipping_and_handling_brackets (start_weight, end_weight, charge) VALUES (0, 9999999.99, 0);
