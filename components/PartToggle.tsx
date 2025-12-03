@@ -18,7 +18,7 @@ export default function PartToggle({ pageNumber }: ToggleProps) {
 
   useEffect(() => {
     const getList = async () => {
-      const res = await fetch("/api/search?query=")
+      const res = await fetch("/api/search?query=&page=" + pageNumber)
       const data: Part[] = await res.json()
       setList(data)
     }
