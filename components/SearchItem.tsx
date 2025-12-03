@@ -11,10 +11,6 @@ export default function SearchItem({ onResults }: SearchItemProps) {
   const [query, setQuery] = useState("")
 
   const handleSearch = async () => {
-    if (!query) {
-      onResults([])
-      return
-    }
     const res = await fetch(`/api/search?query=${encodeURIComponent(query)}`)
     const list: Part[] = await res.json()
     onResults(list)

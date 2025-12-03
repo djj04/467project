@@ -23,7 +23,7 @@ export async function GET(request: Request)
 
         //Search By Part Name
         //TODO: Pagination
-        const allParts = await Part.listLike(`%${query}%`, 0)
+        const allParts = await allPartsFor(query, 0)
         if (allParts)
         {
             res = res.concat(allParts); 
@@ -35,5 +35,14 @@ export async function GET(request: Request)
     catch (error)
     {
         return NextResponse.json([], { status: 500 })
+    }
+}
+
+async function allPartsFor(query: string, page: number): Promise<Part[] | null> {
+    console.log(query)
+    if (query == "") {
+        return await Part.list(page)
+    } else {
+        return await Part.listLike(`%${query}%`, page)
     }
 }
